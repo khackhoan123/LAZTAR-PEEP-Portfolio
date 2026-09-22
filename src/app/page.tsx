@@ -4,16 +4,14 @@ import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { 
-  Building2, 
   MapPin, 
   Maximize2, 
   X, 
   CheckCircle2, 
-  Send,
-  Layers,
+  Send, 
+  Layers, 
   ArrowRight,
-  ShieldCheck,
-  Calendar
+  AlertCircle
 } from 'lucide-react';
 import GlowCursor from '@/components/ui/GlowCursor';
 
@@ -84,6 +82,12 @@ const PROJECTS_DATA: ProjectItem[] = [
   },
 ];
 
+interface FormErrors {
+  fullName?: string;
+  phoneNumber?: string;
+  email?: string;
+}
+
 export default function HomePage() {
   const [scrollProgress, setScrollProgress] = useState<number>(0);
   const [activeSlide, setActiveSlide] = useState<number>(1);
@@ -93,15 +97,89 @@ export default function HomePage() {
   const [contactSubmitted, setContactSubmitted] = useState<boolean>(false);
   const [activeDetailProject, setActiveDetailProject] = useState<ProjectItem | null>(null);
 
-  // Phone Validation State
-  const [phoneNumber, setPhoneNumber] = useState<string>('');
-  const [phoneError, setPhoneError] = useState<string>('');
+  // Form State & Validation
+  const [formData, setFormData] = useState({
+    fullName: '',
+    phoneNumber: '',
+    email: '',
+    message: '',
+  });
+  const [formErrors, setFormErrors] = useState<FormErrors>({});
+  const [touchedFields, setTouchedFields] = useState<{ [key: string]: boolean }>({});
 
-  // Validate Vietnamese phone number format
-  const validateVietnamesePhone = (phone: string) => {
-    const cleanPhone = phone.replace(/[\s.-]/g, '');
-    const vnPhoneRegex = /^(0|\+84)(3|5|7|8|9)[0-9]{8}$/;
-    return vnPhoneRegex.test(cleanPhone);
+  // Validation rules
+  const validateField = (name: string, value: string): string => {
+    if (name === 'fullName') {
+      if (!value.trim()) return 'Vui lòng nhập họ và tên của bạn';
+      if (value.trim().length < 2) return 'Họ và tên tối thiểu 2 ký tự';
+    }
+    if (name === 'phoneNumber') {
+      if (!value.trim()) return 'Vui lòng nhập số điện thoại liên hệ';
+      const clean = value.replace(/[\s.-]/g, '');
+      const vnPhoneRegex = /^(0|\+84)(3|5|7|8|9)[0-9]{8}$/;
+      if (!vnPhoneRegex.test(clean)) {
+        return 'Số điện thoại không hợp lệ (10 số, bắt đầu bằng 03, 05, 07, 08, 09 hoặc +84)';
+      }
+    }
+    if (name === 'email') {
+      if (!value.trim()) return 'Vui lòng nhập địa chỉ email';
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(value.trim())) {
+        return 'Email không hợp lệ (VD: contact@laztar.vn)';
+      }
+    }
+    return '';
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (formErrors[name as keyof FormErrors]) {
+      const err = validateField(name, value);
+      setFormErrors(prev => ({ ...prev, [name]: err }));
+    }
+  };
+
+  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setTouchedFields(prev => ({ ...prev, [name]: true }));
+    const err = validateField(name, value);
+    setFormErrors(prev => ({ ...prev, [name]: err }));
+  };
+
+  const handleContactSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const nameErr = validateField('fullName', formData.fullName);
+    const phoneErr = validateField('phoneNumber', formData.phoneNumber);
+    const emailErr = validateField('email', formData.email);
+
+    if (nameErr || phoneErr || emailErr) {
+      setFormErrors({
+        fullName: nameErr,
+        phoneNumber: phoneErr,
+        email: emailErr,
+      });
+      setTouchedFields({
+        fullName: true,
+        phoneNumber: true,
+        email: true,
+      });
+      return;
+    }
+
+    setFormErrors({});
+    setContactSubmitted(true);
+    setTimeout(() => {
+      setIsContactOpen(false);
+      setContactSubmitted(false);
+      setFormData({
+        fullName: '',
+        phoneNumber: '',
+        email: '',
+        message: '',
+      });
+      setTouchedFields({});
+    }, 2500);
   };
 
   // Track scroll smoothly
@@ -139,21 +217,6 @@ export default function HomePage() {
       top: targetY,
       behavior: 'smooth',
     });
-  };
-
-  const handleContactSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validateVietnamesePhone(phoneNumber)) {
-      setPhoneError('Vui lòng nhập số điện thoại hợp lệ (10 số, bắt đầu bằng 03, 05, 07, 08, 09 hoặc +84)');
-      return;
-    }
-    setPhoneError('');
-    setContactSubmitted(true);
-    setTimeout(() => {
-      setIsContactOpen(false);
-      setContactSubmitted(false);
-      setPhoneNumber('');
-    }, 2500);
   };
 
   const getDashFill = (index: number) => {
@@ -296,10 +359,10 @@ export default function HomePage() {
           }`}
         >
           <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-6 sm:p-8 max-w-lg">
-            {/* Tactile Subtle Badge */}
-            <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 bg-white/5 border border-white/10 text-[11px] text-[#FFF6ED]/80 font-mono tracking-[0.2em] shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] uppercase mb-3.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#C88A35]" />
-              <span>[ 01 / SHOWCASE KIẾN TRÚC ]</span>
+            {/* Micro-Badge: 01 // SHOWCASE KIẾN TRÚC */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-sm text-[11px] font-medium tracking-[0.2em] text-[#FFF6ED]/80 uppercase mb-3 font-body">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
+              <span>01 // SHOWCASE KIẾN TRÚC</span>
             </div>
 
             {/* Title with White-to-Metallic Gradient */}
@@ -325,9 +388,10 @@ export default function HomePage() {
           }`}
         >
           <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-6 sm:p-8 max-w-lg">
-            <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 bg-white/5 border border-white/10 text-[11px] text-[#FFF6ED]/80 font-mono tracking-[0.2em] shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] uppercase mb-3.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#C88A35]" />
-              <span>[ 02 / KHÔNG GIAN NỘI KHU ]</span>
+            {/* Micro-Badge: 02 // KHÔNG GIAN NỘI KHU */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-sm text-[11px] font-medium tracking-[0.2em] text-[#FFF6ED]/80 uppercase mb-3 font-body">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
+              <span>02 // KHÔNG GIAN NỘI KHU</span>
             </div>
 
             <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-normal tracking-wider text-[#FFF6ED] mb-3">
@@ -353,9 +417,10 @@ export default function HomePage() {
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-5">
             {/* Left Description Card */}
             <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-5 sm:p-6 max-w-md">
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 bg-white/5 border border-white/10 text-[11px] text-[#FFF6ED]/80 font-mono tracking-[0.2em] shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] uppercase mb-2.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#C88A35]" />
-                <span>[ 03 / SHOWROOM TRIỂN LÃM ]</span>
+              {/* Micro-Badge: 03 // SHOWROOM TRIỂN LÃM */}
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-sm text-[11px] font-medium tracking-[0.2em] text-[#FFF6ED]/80 uppercase mb-3 font-body">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
+                <span>03 // SHOWROOM TRIỂN LÃM</span>
               </div>
 
               <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-normal tracking-wider text-[#FFF6ED] mb-2">
@@ -417,9 +482,10 @@ export default function HomePage() {
           }`}
         >
           <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-6 sm:p-8 max-w-lg">
-            <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 bg-white/5 border border-white/10 text-[11px] text-[#FFF6ED]/80 font-mono tracking-[0.2em] shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] uppercase mb-3.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#C88A35]" />
-              <span>[ 04 / LIÊN HỆ &amp; DỰ TOÁN ]</span>
+            {/* Micro-Badge: 04 // LIÊN HỆ & DỰ TOÁN */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-sm text-[11px] font-medium tracking-[0.2em] text-[#FFF6ED]/80 uppercase mb-3 font-body">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
+              <span>04 // LIÊN HỆ &amp; DỰ TOÁN</span>
             </div>
 
             <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-normal tracking-wider text-[#FFF6ED] mb-3">
@@ -564,7 +630,7 @@ export default function HomePage() {
       )}
 
       {/* ========================================================
-          LUXURY SKEUOMORPHIC CONSULTATION MODAL
+          LUXURY SKEUOMORPHIC CONSULTATION MODAL (Unified Validation)
       ======================================================== */}
       <div 
         id="contact-modal" 
@@ -582,12 +648,12 @@ export default function HomePage() {
           </button>
 
           {contactSubmitted ? (
-            <div className="text-center py-8 space-y-3">
-              <CheckCircle2 className="w-12 h-12 text-[#C88A35] mx-auto" />
-              <h4 className="text-2xl text-white font-light tracking-tight">
+            <div className="text-center py-8 space-y-3 animate-fadeIn">
+              <CheckCircle2 className="w-12 h-12 text-[#C88A35] mx-auto animate-bounce" />
+              <h4 className="font-heading text-2xl text-white font-normal tracking-wide">
                 Yêu Cầu Đã Gửi Thành Công
               </h4>
-              <p className="text-xs text-neutral-300 leading-relaxed font-light">
+              <p className="font-body text-xs text-neutral-300 leading-relaxed font-light">
                 Kỹ sư trưởng bộ phận đấu thầu của Laztar sẽ liên hệ với bạn trong vòng 10 phút.
               </p>
             </div>
@@ -601,53 +667,89 @@ export default function HomePage() {
               </p>
 
               <form onSubmit={handleContactSubmit} className="space-y-3.5">
-                <input 
-                  type="text" 
-                  placeholder="HỌ VÀ TÊN CỦA BẠN" 
-                  required 
-                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-xs placeholder:text-neutral-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)] focus:border-[#C88A35] focus:outline-none transition-colors"
-                />
+                {/* Full Name Field */}
+                <div>
+                  <input 
+                    type="text" 
+                    name="fullName"
+                    value={formData.fullName}
+                    onChange={handleInputChange}
+                    onBlur={handleInputBlur}
+                    placeholder="HỌ VÀ TÊN CỦA BẠN *" 
+                    required 
+                    className={`w-full px-4 py-3 rounded-xl bg-white/5 border text-white text-xs placeholder:text-neutral-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)] focus:outline-none transition-colors ${
+                      formErrors.fullName && touchedFields.fullName
+                        ? 'border-red-400/50 focus:border-red-400'
+                        : 'border-white/10 focus:border-amber-500/50'
+                    }`}
+                  />
+                  {formErrors.fullName && touchedFields.fullName && (
+                    <p className="text-xs text-red-400/90 mt-1 flex items-center gap-1 font-body">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      <span>{formErrors.fullName}</span>
+                    </p>
+                  )}
+                </div>
+
+                {/* Phone Number Field */}
                 <div>
                   <input 
                     type="tel" 
-                    value={phoneNumber}
-                    onChange={(e) => {
-                      setPhoneNumber(e.target.value);
-                      if (phoneError && validateVietnamesePhone(e.target.value)) {
-                        setPhoneError('');
-                      }
-                    }}
-                    onBlur={() => {
-                      if (phoneNumber.trim() && !validateVietnamesePhone(phoneNumber)) {
-                        setPhoneError('Số điện thoại không đúng định dạng (VD: 0912 345 678 hoặc +84 912 345 678)');
-                      } else {
-                        setPhoneError('');
-                      }
-                    }}
-                    placeholder="SỐ ĐIỆN THOẠI LIÊN HỆ (VD: 0912 345 678)" 
+                    name="phoneNumber"
+                    value={formData.phoneNumber}
+                    onChange={handleInputChange}
+                    onBlur={handleInputBlur}
+                    placeholder="SỐ ĐIỆN THOẠI LIÊN HỆ (VD: 0912 345 678) *" 
                     required 
                     className={`w-full px-4 py-3 rounded-xl bg-white/5 border text-white text-xs placeholder:text-neutral-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)] focus:outline-none transition-colors ${
-                      phoneError 
-                        ? 'border-red-500/80 focus:border-red-400' 
-                        : 'border-white/10 focus:border-[#C88A35]'
+                      formErrors.phoneNumber && touchedFields.phoneNumber
+                        ? 'border-red-400/50 focus:border-red-400'
+                        : 'border-white/10 focus:border-amber-500/50'
                     }`}
                   />
-                  {phoneError && (
-                    <span className="block text-[11px] text-red-400 mt-1.5 ml-1 font-body">
-                      {phoneError}
-                    </span>
+                  {formErrors.phoneNumber && touchedFields.phoneNumber && (
+                    <p className="text-xs text-red-400/90 mt-1 flex items-center gap-1 font-body">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      <span>{formErrors.phoneNumber}</span>
+                    </p>
                   )}
                 </div>
-                <input 
-                  type="email" 
-                  placeholder="ĐỊA CHỈ EMAIL" 
-                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-xs placeholder:text-neutral-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)] focus:border-[#C88A35] focus:outline-none transition-colors"
-                />
-                <textarea 
-                  rows={3} 
-                  placeholder="THÔNG TIN CÔNG TRÌNH (Địa điểm, diện tích, quy mô...)" 
-                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-xs placeholder:text-neutral-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)] focus:border-[#C88A35] focus:outline-none transition-colors resize-none"
-                />
+
+                {/* Email Field */}
+                <div>
+                  <input 
+                    type="email" 
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    onBlur={handleInputBlur}
+                    placeholder="ĐỊA CHỈ EMAIL (VD: contact@laztar.vn) *" 
+                    required 
+                    className={`w-full px-4 py-3 rounded-xl bg-white/5 border text-white text-xs placeholder:text-neutral-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)] focus:outline-none transition-colors ${
+                      formErrors.email && touchedFields.email
+                        ? 'border-red-400/50 focus:border-red-400'
+                        : 'border-white/10 focus:border-amber-500/50'
+                    }`}
+                  />
+                  {formErrors.email && touchedFields.email && (
+                    <p className="text-xs text-red-400/90 mt-1 flex items-center gap-1 font-body">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      <span>{formErrors.email}</span>
+                    </p>
+                  )}
+                </div>
+
+                {/* Project Details / Message */}
+                <div>
+                  <textarea 
+                    name="message"
+                    rows={3} 
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    placeholder="THÔNG TIN CÔNG TRÌNH (Địa điểm, diện tích, quy mô...)" 
+                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-xs placeholder:text-neutral-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)] focus:border-amber-500/50 focus:outline-none transition-colors resize-none"
+                  />
+                </div>
 
                 {/* Tactile Button: Gửi Yêu Cầu */}
                 <button
