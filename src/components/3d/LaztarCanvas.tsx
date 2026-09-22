@@ -5,13 +5,18 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 interface LaztarCanvasProps {
-  modelMode?: 'building' | 'seakeep';
   scrollProgress?: number;
   onLoaded?: () => void;
 }
 
+// Exponential inertia damping helper using THREE.MathUtils.damp
+function dampVector3(current: THREE.Vector3, target: THREE.Vector3, lambda: number, delta: number) {
+  current.x = THREE.MathUtils.damp(current.x, target.x, lambda, delta);
+  current.y = THREE.MathUtils.damp(current.y, target.y, lambda, delta);
+  current.z = THREE.MathUtils.damp(current.z, target.z, lambda, delta);
+}
+
 export default function LaztarCanvas({
-  modelMode = 'building',
   scrollProgress = 0,
   onLoaded,
 }: LaztarCanvasProps) {
@@ -19,9 +24,6 @@ export default function LaztarCanvas({
 
   const scrollRef = useRef<number>(scrollProgress);
   scrollRef.current = scrollProgress;
-
-  const modeRef = useRef<'building' | 'seakeep'>(modelMode);
-  modeRef.current = modelMode;
 
   const onLoadedRef = useRef(onLoaded);
   onLoadedRef.current = onLoaded;
@@ -36,7 +38,7 @@ export default function LaztarCanvas({
     // 1. Scene & Camera Setup
     const scene = new THREE.Scene();
     scene.background = new THREE.Color('#000000');
-    scene.fog = new THREE.FogExp2('#000000', 0.01);
+    scene.fog = new THREE.FogExp2('#000000', 0.012);
 
     const sizes = {
       width: window.innerWidth,
@@ -44,19 +46,18 @@ export default function LaztarCanvas({
     };
 
     const camera = new THREE.PerspectiveCamera(
-      48,
+      46,
       sizes.width / sizes.height,
       0.1,
       100
     );
-    camera.position.set(0, 0.5, 4.0);
+    camera.position.set(2.5, 1.8, 4.8);
     scene.add(camera);
 
-    // 2. Full-Screen Liquid Metallic Waves Background Shader
+    // 2. Full-Screen Liquid Metallic Waves Background Shader (PRESERVED)
     const shaderUniforms = {
       uTime: { value: 0 },
       uResolution: { value: new THREE.Vector2(sizes.width, sizes.height) },
-      uMouse: { value: new THREE.Vector2(0, 0) },
       uScroll: { value: 0 },
     };
 
@@ -72,7 +73,6 @@ export default function LaztarCanvas({
       varying vec2 vUv;
       uniform float uTime;
       uniform vec2 uResolution;
-      uniform vec2 uMouse;
       uniform float uScroll;
 
       float hash(float n) { return fract(sin(n) * 43758.5453123); }
@@ -89,7 +89,6 @@ export default function LaztarCanvas({
 
       void main() {
         vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution.xy) / uResolution.y;
-        float aspect = uResolution.x / uResolution.y;
         
         float time = uTime * 0.08;
         float scroll = uScroll;
@@ -112,8 +111,7 @@ export default function LaztarCanvas({
         warpedUv.y += cos(uv.x * 1.2 + time * 0.18 + scrollDeform * 1.2) * 0.25;
         
         vec2 scrollDrift = vec2(scroll * 0.04, -scroll * 0.02);
-        vec2 mouseShift = vec2(uMouse.x * aspect * 0.05, uMouse.y * 0.05);
-        warpedUv += scrollDrift + mouseShift;
+        warpedUv += scrollDrift;
         
         vec2 dir1 = vec2(cos(angle1), sin(angle1));
         vec2 dir2 = vec2(cos(angle2), sin(angle2));
@@ -129,6 +127,7 @@ export default function LaztarCanvas({
         float crispSpecular = pow(max(0.0, 1.0 - abs(waveField - 0.15)), 8.0);
         float crest = wideSheen * 0.5 + crispSpecular * 0.9;
         
+        // Molten Gold to Sapphire Blue
         vec3 c0_shadow = vec3(0.0012, 0.0008, 0.0005);
         vec3 c0_wave1  = vec3(0.095, 0.050, 0.018);
         vec3 c0_wave2  = vec3(0.055, 0.028, 0.010);
@@ -171,53 +170,36 @@ export default function LaztarCanvas({
     bgMesh.renderOrder = -10;
     camera.add(bgMesh);
 
-    // 3. WebGL Renderer
+    // 3. WebGL Renderer - High Performance 60FPS Optimization
     const renderer = new THREE.WebGLRenderer({
       canvas: canvas,
-      antialias: true,
+      antialias: false,
       alpha: false,
       powerPreference: 'high-performance',
     });
     renderer.setSize(sizes.width, sizes.height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFShadowMap;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.2)); // DPR capped at 1.2
+    renderer.shadowMap.enabled = false; // Shadows disabled for 60FPS
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.8;
 
-    // 4. Studio Lighting Rig
-    const ambientLight = new THREE.AmbientLight('#ffffff', 0.8);
+    // 4. Warm Architectural Studio Lighting (PRESERVED)
+    const ambientLight = new THREE.AmbientLight('#ffffff', 0.9);
     scene.add(ambientLight);
 
-    // Key Light: High-angle architectural sun
-    const keyLight = new THREE.DirectionalLight('#ffffff', 4.0);
-    keyLight.position.set(8, 14, 8);
-    keyLight.castShadow = true;
-    keyLight.shadow.mapSize.width = 1024;
-    keyLight.shadow.mapSize.height = 1024;
-    keyLight.shadow.camera.near = 1.0;
-    keyLight.shadow.camera.far = 30;
-    keyLight.shadow.bias = -0.0005;
-    scene.add(keyLight);
+    const sunLight = new THREE.DirectionalLight('#fff5e0', 4.2);
+    sunLight.position.set(8, 14, 8);
+    scene.add(sunLight);
 
-    // Key Spotlight for Dramatic Lustre
-    const spotLight = new THREE.SpotLight('#ffe8c2', 12.0);
-    spotLight.position.set(6, 12, 5);
-    spotLight.angle = Math.PI / 3;
-    spotLight.penumbra = 0.8;
-    scene.add(spotLight);
-
-    // Rim Light: Cool Sapphire Blue edge light
     const rimLight = new THREE.DirectionalLight('#8ec5fc', 6.0);
     rimLight.position.set(-8, 6, -6);
     scene.add(rimLight);
 
-    // Fill Light: Warm cream
-    const fillLight = new THREE.DirectionalLight('#fff3e6', 1.5);
+    const fillLight = new THREE.DirectionalLight('#fff3e6', 1.8);
     fillLight.position.set(-3, -2, 4);
     scene.add(fillLight);
 
-    // 5. Forge Sparks Particle System
+    // 5. Atmospheric Forge Sparks (PRESERVED)
     function createSparkTexture(): THREE.CanvasTexture {
       const canvasElement = document.createElement('canvas');
       canvasElement.width = 16;
@@ -235,7 +217,7 @@ export default function LaztarCanvas({
       return new THREE.CanvasTexture(canvasElement);
     }
 
-    const sparkCount = 350;
+    const sparkCount = 280;
     const sparkPositions = new Float32Array(sparkCount * 3);
     const sparkColors = new Float32Array(sparkCount * 3);
     const sparkData: Array<{
@@ -277,7 +259,7 @@ export default function LaztarCanvas({
     sparkGeometry.setAttribute('color', new THREE.BufferAttribute(sparkColors, 3));
 
     const sparkMaterial = new THREE.PointsMaterial({
-      size: 0.035,
+      size: 0.032,
       vertexColors: true,
       transparent: true,
       opacity: 0.85,
@@ -289,196 +271,157 @@ export default function LaztarCanvas({
     const sparkParticles = new THREE.Points(sparkGeometry, sparkMaterial);
     scene.add(sparkParticles);
 
-    // 6. 3D Model Loader with Mathematical Box3 Auto-Scale & Pivot
+    // 6. Model Root Pivot & Interior Showroom Anchor
     const modelPivot = new THREE.Group();
     scene.add(modelPivot);
 
-    let activeModel: THREE.Object3D | null = null;
-    const gltfLoader = new GLTFLoader();
+    const showroomAnchor = new THREE.Vector3(0, -0.95, -0.15);
 
-    function loadModel(mode: 'building' | 'seakeep') {
-      const modelUrl =
-        mode === 'seakeep'
-          ? '/models/sea_keep_lonely_watcher.glb'
-          : '/models/building.glb';
+    // Interior Showroom Spotlight (illuminates the frosted glass display wall from ceiling)
+    const showroomSpot = new THREE.SpotLight(0xfff1de, 6.5);
+    showroomSpot.angle = Math.PI / 4;
+    showroomSpot.penumbra = 0.75;
+    scene.add(showroomSpot);
+    scene.add(showroomSpot.target);
 
-      if (activeModel) {
-        modelPivot.remove(activeModel);
-        activeModel = null;
-      }
-
-      gltfLoader.load(
-        modelUrl,
-        (gltf) => {
-          if (!isMounted) return;
-          const model = gltf.scene;
-          activeModel = model;
-          modelPivot.add(model);
-
-          model.traverse((child: any) => {
-            if (child.isMesh) {
-              child.castShadow = true;
-              child.receiveShadow = true;
-
-              if (mode === 'seakeep') {
-                // Hide sky dome if present so island is visible
-                const nameLower = (child.name || '').toLowerCase();
-                if (nameLower.includes('sky')) {
-                  child.visible = false;
-                }
-
-                if (child.material) {
-                  if (Array.isArray(child.material)) {
-                    child.material.forEach((m: any) => {
-                      m.side = THREE.DoubleSide;
-                      m.roughness = 0.55;
-                      m.metalness = 0.2;
-                    });
-                  } else {
-                    child.material.side = THREE.DoubleSide;
-                    child.material.roughness = 0.55;
-                    child.material.metalness = 0.2;
-                  }
-                }
-              } else {
-                // Building model with PBR enhancements
-                const name = (child.name || '').toLowerCase();
-                if (name.includes('glass')) {
-                  child.material = new THREE.MeshPhysicalMaterial({
-                    color: new THREE.Color('#98d4ee'),
-                    roughness: 0.05,
-                    metalness: 0.15,
-                    transmission: 0.8,
-                    transparent: true,
-                    opacity: 0.85,
-                    ior: 1.52,
-                    side: THREE.DoubleSide,
-                  });
-                } else if (name.includes('core')) {
-                  child.material = new THREE.MeshStandardMaterial({
-                    color: new THREE.Color('#ffe29e'),
-                    emissive: new THREE.Color('#ffa826'),
-                    emissiveIntensity: 0.8,
-                    roughness: 0.3,
-                  });
-                } else if (name.includes('gold')) {
-                  child.material = new THREE.MeshStandardMaterial({
-                    color: new THREE.Color('#d4af37'),
-                    roughness: 0.25,
-                    metalness: 0.95,
-                  });
-                } else if (name.includes('titanium') || name.includes('column')) {
-                  child.material = new THREE.MeshStandardMaterial({
-                    color: new THREE.Color('#383e49'),
-                    roughness: 0.35,
-                    metalness: 0.85,
-                  });
-                } else {
-                  // Travertine stone facade
-                  child.material = new THREE.MeshStandardMaterial({
-                    color: new THREE.Color('#8a919d'),
-                    roughness: 0.45,
-                    metalness: 0.2,
-                  });
-                }
-              }
-            }
-          });
-
-          // Exact mathematical Bounding Box scaling & center calculation
-          const boxInitial = new THREE.Box3().setFromObject(model);
-          const sizeInitial = boxInitial.getSize(new THREE.Vector3());
-          const maxDim = Math.max(sizeInitial.x, sizeInitial.y, sizeInitial.z);
-          const targetScale = (mode === 'seakeep' ? 4.2 : 3.6) / (maxDim > 0.0001 ? maxDim : 1);
-          model.scale.setScalar(targetScale);
-
-          model.updateMatrixWorld(true);
-
-          const boxScaled = new THREE.Box3().setFromObject(model);
-          const centerScaled = boxScaled.getCenter(new THREE.Vector3());
-
-          model.position.sub(centerScaled);
-          modelPivot.position.y = -0.25;
-
-          if (onLoadedRef.current) {
-            onLoadedRef.current();
-          }
-        },
-        undefined,
-        (err) => {
-          console.error('Error loading GLTF model:', err);
-          if (onLoadedRef.current) onLoadedRef.current();
-        }
-      );
-    }
-
-    let currentLoadedMode = modeRef.current;
-    loadModel(currentLoadedMode);
-
-    // 7. Mouse and Resize Tracking
-    let mouseX = 0;
-    let mouseY = 0;
-    let targetMouseX = 0;
-    let targetMouseY = 0;
-
-    const onMouseMove = (e: MouseEvent) => {
-      targetMouseX = (e.clientX / window.innerWidth) * 2 - 1;
-      targetMouseY = (e.clientY / window.innerHeight) * 2 - 1;
+    // Texture Loader for 3 Project Canvases
+    const textureLoader = new THREE.TextureLoader();
+    const textures = {
+      canvas1: textureLoader.load('/images/projects/villa.jpg', (t) => { t.colorSpace = THREE.SRGBColorSpace; }),
+      canvas2: textureLoader.load('/images/projects/tower.jpg', (t) => { t.colorSpace = THREE.SRGBColorSpace; }),
+      canvas3: textureLoader.load('/images/projects/eco.jpg', (t) => { t.colorSpace = THREE.SRGBColorSpace; }),
     };
-    window.addEventListener('mousemove', onMouseMove, { passive: true });
 
+    // Load building.glb
+    const gltfLoader = new GLTFLoader();
+    gltfLoader.load(
+      '/models/building.glb',
+      (gltf) => {
+        if (!isMounted) return;
+        const model = gltf.scene;
+        modelPivot.add(model);
+
+        // Auto-center & Scale
+        const boxInitial = new THREE.Box3().setFromObject(model);
+        const sizeInitial = boxInitial.getSize(new THREE.Vector3());
+        const maxDim = Math.max(sizeInitial.x, sizeInitial.y, sizeInitial.z);
+        const targetScale = 3.6 / (maxDim > 0.0001 ? maxDim : 1);
+        model.scale.setScalar(targetScale);
+
+        model.updateMatrixWorld(true);
+
+        const boxScaled = new THREE.Box3().setFromObject(model);
+        const centerScaled = boxScaled.getCenter(new THREE.Vector3());
+
+        model.position.sub(centerScaled);
+        modelPivot.position.y = -0.2;
+        modelPivot.updateMatrixWorld(true);
+
+        // Traverse & Apply Project Textures & PBR Materials
+        model.traverse((child: any) => {
+          if (child.isMesh) {
+            const name = child.name || '';
+
+            // 1. Assign project textures to the 3 interior canvases
+            if (name === 'Showroom_Canvas_1') {
+              child.material = new THREE.MeshBasicMaterial({ map: textures.canvas1 });
+            } else if (name === 'Showroom_Canvas_2') {
+              child.material = new THREE.MeshBasicMaterial({ map: textures.canvas2 });
+              // Obtain world position of center canvas for showroom anchor
+              child.getWorldPosition(showroomAnchor);
+              showroomSpot.position.set(showroomAnchor.x, showroomAnchor.y + 1.2, showroomAnchor.z + 1.2);
+              showroomSpot.target.position.copy(showroomAnchor);
+              showroomSpot.target.updateMatrixWorld();
+            } else if (name === 'Showroom_Canvas_3') {
+              child.material = new THREE.MeshBasicMaterial({ map: textures.canvas3 });
+            }
+
+            // 2. Architectural Glass Materials (Transparent so showroom is visible through windows)
+            if (name.toLowerCase().includes('glass_lobby') || name.toLowerCase().includes('glass_')) {
+              child.material = new THREE.MeshPhysicalMaterial({
+                color: new THREE.Color('#94d0ea'),
+                roughness: 0.04,
+                metalness: 0.1,
+                transmission: 0.88,
+                transparent: true,
+                opacity: 0.7,
+                ior: 1.5,
+                side: THREE.DoubleSide,
+              });
+            } else if (name === 'Frosted_ShowroomWall') {
+              // Frosted Dark Glass Partition Wall
+              child.material = new THREE.MeshPhysicalMaterial({
+                color: new THREE.Color('#101319'),
+                roughness: 0.28,
+                metalness: 0.35,
+                transmission: 0.6,
+                transparent: true,
+                opacity: 0.92,
+                side: THREE.DoubleSide,
+              });
+            } else if (name.toLowerCase().includes('gold')) {
+              child.material = new THREE.MeshStandardMaterial({
+                color: new THREE.Color('#d4af37'),
+                roughness: 0.22,
+                metalness: 0.95,
+              });
+            } else if (name.toLowerCase().includes('core')) {
+              child.material = new THREE.MeshStandardMaterial({
+                color: new THREE.Color('#ffe29e'),
+                emissive: new THREE.Color('#ffa826'),
+                emissiveIntensity: 0.75,
+                roughness: 0.3,
+              });
+            }
+          }
+        });
+
+        if (onLoadedRef.current) {
+          onLoadedRef.current();
+        }
+      },
+      undefined,
+      (err) => {
+        console.error('Error loading building model:', err);
+        if (onLoadedRef.current) onLoadedRef.current();
+      }
+    );
+
+    // 7. Resize Listener (No mouse tracking - 100% scroll driven for performance)
     const onResize = () => {
       sizes.width = window.innerWidth;
       sizes.height = window.innerHeight;
       camera.aspect = sizes.width / sizes.height;
       camera.updateProjectionMatrix();
       renderer.setSize(sizes.width, sizes.height);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.2));
       shaderUniforms.uResolution.value.set(sizes.width, sizes.height);
     };
     window.addEventListener('resize', onResize);
 
-    // 8. Main Render & Smooth Lerp Animation Loop
-    let currentScroll = scrollRef.current;
+    // 8. Main Render Loop with THREE.MathUtils.damp (Inertia & Smooth)
+    const targetCameraPos = new THREE.Vector3(2.5, 1.8, 4.8);
+    const targetLookAt = new THREE.Vector3(-0.3, 0.2, 0.0);
+    const currentLookAt = new THREE.Vector3(-0.3, 0.2, 0.0);
+
     const clock = new THREE.Clock();
 
     const animate = () => {
       if (!isMounted) return;
       animationFrameId = requestAnimationFrame(animate);
 
-      const deltaTime = clock.getDelta();
+      const delta = Math.min(clock.getDelta(), 0.1);
       const elapsedTime = clock.getElapsedTime();
+      const p = Math.min(Math.max(scrollRef.current, 0), 1);
 
-      if (modeRef.current !== currentLoadedMode) {
-        currentLoadedMode = modeRef.current;
-        loadModel(currentLoadedMode);
-      }
-
-      const targetScroll = scrollRef.current;
-      currentScroll += (targetScroll - currentScroll) * 0.04;
-
-      mouseX += (targetMouseX - mouseX) * 0.05;
-      mouseY += (targetMouseY - mouseY) * 0.05;
-
-      modelPivot.rotation.y = mouseX * 0.22;
-      modelPivot.rotation.x = mouseY * 0.12;
-
-      // Swirling Forge Sparks physics
+      // Animate forge sparks (Scroll driven speedup)
       const posArray = sparkParticles.geometry.attributes.position.array as Float32Array;
-      const scrollVelocity = Math.abs(targetScroll - currentScroll);
-      const speedMultiplier = 1.0 + scrollVelocity * 8.0;
-      const turbulence = scrollVelocity * 0.8;
-
       for (let i = 0; i < sparkCount; i++) {
         const idx = i * 3;
         const data = sparkData[i];
-        posArray[idx] += data.speedX * deltaTime * speedMultiplier;
-        posArray[idx + 1] += data.speedY * deltaTime * speedMultiplier;
-        posArray[idx + 2] += data.speedZ * deltaTime * speedMultiplier;
-
-        const currentSway = data.swayRadius * (1.0 + turbulence * 4.0);
-        posArray[idx] += Math.sin(elapsedTime * data.swaySpeed + data.phase) * currentSway * deltaTime;
-        posArray[idx + 2] += Math.cos(elapsedTime * data.swaySpeed + data.phase) * currentSway * deltaTime;
+        posArray[idx] += data.speedX * delta;
+        posArray[idx + 1] += data.speedY * delta;
+        posArray[idx + 2] += data.speedZ * delta;
 
         if (posArray[idx + 1] > 3.2 || Math.abs(posArray[idx]) > 3.8 || Math.abs(posArray[idx + 2]) > 3.8) {
           posArray[idx + 1] = -2.5;
@@ -488,26 +431,63 @@ export default function LaztarCanvas({
       }
       sparkParticles.geometry.attributes.position.needsUpdate = true;
 
-      // Camera 360 orbits the 3D model based on scroll depth (from reference)
-      const phi = currentScroll * Math.PI * 2.0;
-      const y = 0.45 + Math.sin(currentScroll * Math.PI) * 0.75;
-      const radius = 4.2 - Math.sin(currentScroll * Math.PI) * 0.5;
-      const x = radius * Math.sin(phi);
-      const z = radius * Math.cos(phi);
+      // ========================================================
+      // 4-STAGE CAMERA TRAJECTORY TIMELINE (100% Inside Enclosed Showroom)
+      // Chặng 1 (0.00 -> 0.25): Toàn cảnh ngoại thất tòa nhà
+      // Chặng 2 (0.25 -> 0.50): Lướt xuyên kính tiến vào phòng showroom
+      // Chặng 3 (0.50 -> 0.78): Đứng trong phòng đối diện 3 khung tranh trên vách kính mờ
+      // Chặng 4 (0.78 -> 1.00): Rút nhẹ góc cao nghệ thuật hoàng hôn cho mục dự toán
+      // ========================================================
+      const sX = showroomAnchor.x;
+      const sY = showroomAnchor.y;
+      const sZ = showroomAnchor.z;
 
-      const transitionProgress = Math.min(1.0, currentScroll / 0.28);
-      const easeFactor = (Math.cos(transitionProgress * Math.PI) + 1.0) * 0.5;
-      const lookAtXOffset = -0.75 * easeFactor;
+      if (p <= 0.25) {
+        // Stage 1: Exterior 3/4 Panorama
+        const t = p / 0.25;
+        targetCameraPos.set(
+          sX + 2.5 - t * 0.8,
+          sY + 2.0 - t * 0.6,
+          sZ + 4.8 - t * 1.5
+        );
+        targetLookAt.set(sX - 0.3 + t * 0.2, sY + 0.8 - t * 0.4, sZ);
+      } else if (p <= 0.50) {
+        // Stage 2: Gliding directly INTO the showroom room through the glass facade
+        const t = (p - 0.25) / 0.25;
+        targetCameraPos.set(
+          sX + 1.7 * (1 - t),
+          sY + 1.4 - t * 1.35,
+          sZ + 3.3 - t * 1.6
+        );
+        targetLookAt.set(sX - 0.1 * (1 - t), sY + 0.4 - t * 0.35, sZ);
+      } else if (p <= 0.78) {
+        // Stage 3: Inside Showroom Room facing the 3 project frames
+        const t = (p - 0.50) / 0.28;
+        targetCameraPos.set(
+          sX + Math.sin(t * Math.PI) * 0.12,
+          sY + 0.05,
+          sZ + 1.7 - t * 0.08
+        );
+        targetLookAt.set(sX, sY + 0.05, sZ);
+      } else {
+        // Stage 4: Elevated Twilight Perspective for Consultation
+        const t = (p - 0.78) / 0.22;
+        targetCameraPos.set(
+          sX - 2.6 * t,
+          sY + 0.05 + t * 2.2,
+          sZ + 1.62 + t * 2.8
+        );
+        targetLookAt.set(sX, sY + 0.6 * t, sZ);
+      }
 
-      const targetLookAt = new THREE.Vector3(lookAtXOffset, 0.1, 0);
-      const targetPos = new THREE.Vector3(x, y, z);
-      camera.position.lerp(targetPos, 0.04);
-      camera.lookAt(targetLookAt);
+      // Smooth Inertia Damping (dampVector3 via THREE.MathUtils.damp)
+      dampVector3(camera.position, targetCameraPos, 3.8, delta);
+      dampVector3(currentLookAt, targetLookAt, 4.2, delta);
+      camera.lookAt(currentLookAt);
 
-      // Synchronize backshader uniforms
+      // Shader uniforms sync
       shaderUniforms.uTime.value = elapsedTime;
-      shaderUniforms.uMouse.value.set(mouseX, -mouseY);
-      shaderUniforms.uScroll.value = currentScroll;
+      shaderUniforms.uScroll.value = p;
 
       renderer.render(scene, camera);
     };
@@ -517,14 +497,13 @@ export default function LaztarCanvas({
     return () => {
       isMounted = false;
       cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('resize', onResize);
       renderer.dispose();
     };
   }, []);
 
   return (
-    <div id="webgl-canvas-container">
+    <div id="webgl-canvas-container" className="fixed inset-0 w-full h-full pointer-events-auto">
       <canvas ref={canvasRef} className="w-full h-full block outline-none" />
     </div>
   );
