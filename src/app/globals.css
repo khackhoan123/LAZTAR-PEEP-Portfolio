@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Italiana&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -7,6 +7,16 @@
   --gold-primary: #d4af37;
   --gold-light: #f3e5ab;
   --gold-dark: #aa820a;
+  --font-heading-family: var(--font-heading), 'Cormorant Garamond', 'Playfair Display', serif;
+  --font-body-family: var(--font-body), 'Plus Jakarta Sans', sans-serif;
+}
+
+.font-heading {
+  font-family: var(--font-heading-family) !important;
+}
+
+.font-body {
+  font-family: var(--font-body-family) !important;
 }
 
 html, body {
@@ -15,7 +25,7 @@ html, body {
   padding: 0;
   background-color: #000000 !important;
   color: #ffffff;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-body-family);
   overflow-x: hidden;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -28,34 +38,6 @@ body {
 ::-webkit-scrollbar {
   display: none;
   width: 0;
-}
-
-/* Custom Cursor Rings */
-.cursor-inner {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 6px;
-  height: 6px;
-  border: 2px solid rgba(255, 255, 255, 1);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 9999;
-}
-
-.cursor-outer {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 40px;
-  height: 40px;
-  border: 1.5px solid rgba(255, 255, 255, 0.7);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 9998;
-  transition: width 0.3s, height 0.3s, background 0.3s, border-color 0.3s;
 }
 
 /* Fixed WebGL Canvas Container */
@@ -334,7 +316,6 @@ body {
 
 @media (max-width: 768px) {
   body { cursor: auto; }
-  .cursor-inner, .cursor-outer { display: none !important; }
   .grid-lines { left: 20px; right: 20px; width: calc(100% - 40px); }
   .grid-horizontal-line { top: 64px; }
   .slide-title { font-size: 38px !important; margin-bottom: 14px; }

@@ -46,10 +46,10 @@ export default function LaztarCanvas({
     };
 
     const camera = new THREE.PerspectiveCamera(
-      46,
+      45,
       sizes.width / sizes.height,
-      0.1,
-      100
+      0.5,
+      500
     );
     camera.position.set(2.5, 1.8, 4.8);
     scene.add(camera);
@@ -173,9 +173,10 @@ export default function LaztarCanvas({
     // 3. WebGL Renderer - High Performance 60FPS Optimization
     const renderer = new THREE.WebGLRenderer({
       canvas: canvas,
-      antialias: false,
+      antialias: true,
       alpha: false,
       powerPreference: 'high-performance',
+      logarithmicDepthBuffer: true,
     });
     renderer.setSize(sizes.width, sizes.height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.2)); // DPR capped at 1.2
@@ -322,6 +323,32 @@ export default function LaztarCanvas({
           if (child.isMesh) {
             const name = child.name || '';
 
+            // Showroom Ceiling & Slab: Apply polygonOffset to prevent z-fighting and flickering
+            const isCeilingOrSlab = 
+              name === 'Stone_MidFloorSlab' ||
+              name.toLowerCase().includes('midfloor') ||
+              name.toLowerCase().includes('ceiling') ||
+              name.toLowerCase().includes('roof') ||
+              name.toLowerCase().includes('slab') ||
+              name.toLowerCase().includes('lobbyfloor');
+
+            if (isCeilingOrSlab) {
+              const applyPolygonOffset = (mat: any) => {
+                if (!mat) return;
+                mat.polygonOffset = true;
+                mat.polygonOffsetFactor = -1.0;
+                mat.polygonOffsetUnits = -4.0;
+                mat.needsUpdate = true;
+              };
+              if (Array.isArray(child.material)) {
+                child.material.forEach(applyPolygonOffset);
+              } else {
+                applyPolygonOffset(child.material);
+              }
+              child.castShadow = false;
+              child.receiveShadow = false;
+            }
+
             // 1. Assign project textures to the 3 interior canvases
             if (name === 'Showroom_Canvas_1') {
               child.material = new THREE.MeshBasicMaterial({ map: textures.canvas1 });
@@ -347,6 +374,7 @@ export default function LaztarCanvas({
                 opacity: 0.7,
                 ior: 1.5,
                 side: THREE.DoubleSide,
+                depthWrite: false,
               });
             } else if (name === 'Frosted_ShowroomWall') {
               // Frosted Dark Glass Partition Wall
