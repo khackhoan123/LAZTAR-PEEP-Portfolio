@@ -337,27 +337,34 @@ body:has(#portfolio-page) {
   .story-dashes { display: none; }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 /* ========================================================
-   CLEAN A4 PRINT STYLING (FIXES 8-PAGE PRINT BUG)
+   CLEAN 1-PAGE A4 MINIMALIST TECH RESUME PRINT STYLING
 ======================================================== */
 @media print {
   @page {
     size: A4 portrait;
-    margin: 10mm 12mm;
+    margin: 8mm 12mm;
   }
 
   html, body {
     background: #ffffff !important;
     background-color: #ffffff !important;
-    color: #111111 !important;
+    color: #000000 !important;
     min-height: auto !important;
     height: auto !important;
     overflow: visible !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+    font-family: var(--font-body-family), 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    font-size: 8.5pt !important;
+    line-height: 1.25 !important;
   }
 
-  /* Hide 3D Canvas, WebGL, Background waves, Cursors, Header & Main page */
+  /* Completely hide all screen elements, 3D Canvas, navigation, overlays */
   #webgl-canvas-container,
   #portfolio-page > header,
   #portfolio-page > main,
@@ -368,7 +375,7 @@ body:has(#portfolio-page) {
     display: none !important;
   }
 
-  /* Reset CV Modal Overlay to clean paper stream */
+  /* Reset CV Modal Overlay to flat paper */
   .cv-modal-overlay {
     position: static !important;
     display: block !important;
@@ -396,18 +403,19 @@ body:has(#portfolio-page) {
     border: none !important;
     box-shadow: none !important;
     padding: 0 !important;
-    color: #111111 !important;
+    color: #000000 !important;
   }
 
-  /* Target Printable CV Container */
+  /* Target Printable CV Container: Minimalist Tech Resume */
   #printable-cv {
     display: block !important;
     width: 100% !important;
     max-width: 100% !important;
     background: #ffffff !important;
-    color: #111111 !important;
-    font-size: 10.5pt !important;
-    line-height: 1.35 !important;
+    color: #000000 !important;
+    font-family: var(--font-body-family), 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 8.5pt !important;
+    line-height: 1.25 !important;
     padding: 0 !important;
     margin: 0 !important;
     box-shadow: none !important;
@@ -415,50 +423,93 @@ body:has(#portfolio-page) {
   }
 
   #printable-cv * {
-    color: #111111 !important;
-    border-color: #d1d5db !important;
-    background-color: transparent !important;
+    color: #000000 !important;
+    background: transparent !important;
     box-shadow: none !important;
     text-shadow: none !important;
+    font-family: var(--font-body-family), 'Plus Jakarta Sans', sans-serif !important;
+    font-variant-numeric: lining-nums tabular-nums !important;
   }
 
-  #printable-cv h1 {
-    font-size: 18pt !important;
+  /* Header Section */
+  .cv-print-header {
+    text-align: center !important;
+    margin-bottom: 6px !important;
+    padding-bottom: 4px !important;
+  }
+
+  .cv-print-header h1 {
+    font-size: 15pt !important;
+    font-weight: 800 !important;
     color: #000000 !important;
-    margin-bottom: 2pt !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5pt !important;
+    margin-bottom: 2px !important;
+    line-height: 1.1 !important;
+  }
+
+  .cv-print-header h2 {
+    font-size: 9.5pt !important;
+    font-weight: 600 !important;
+    color: #111111 !important;
+    margin-bottom: 3px !important;
+  }
+
+  .cv-print-contact {
+    font-size: 8pt !important;
+    color: #333333 !important;
+    display: flex !important;
+    justify-content: center !important;
+    gap: 6px !important;
+  }
+
+  /* Section Title: Single thin black line */
+  .cv-print-section-title {
+    font-size: 9pt !important;
+    font-weight: 800 !important;
+    color: #000000 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5pt !important;
+    border-bottom: 1px solid #000000 !important;
+    padding-bottom: 1.5px !important;
+    margin-top: 5px !important;
+    margin-bottom: 3px !important;
+    display: block !important;
+  }
+
+  /* Section and Items */
+  .cv-print-block {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-bottom: 3px !important;
+  }
+
+  .cv-print-item {
+    margin-bottom: 2.5px !important;
+  }
+
+  .cv-print-item strong {
+    color: #000000 !important;
     font-weight: 700 !important;
   }
 
-  #printable-cv h2 {
-    font-size: 11pt !important;
-    font-weight: 600 !important;
+  .cv-print-item em {
+    font-style: italic !important;
     color: #222222 !important;
   }
 
-  #printable-cv h3 {
-    font-size: 11pt !important;
-    font-weight: 700 !important;
-    color: #000000 !important;
-    border-bottom: 1.5pt solid #111111 !important;
-    padding-bottom: 2pt !important;
-    margin-top: 8pt !important;
-    margin-bottom: 4pt !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5pt !important;
+  .cv-print-bullets {
+    padding-left: 12px !important;
+    margin-top: 1px !important;
+    margin-bottom: 2px !important;
   }
 
-  .cv-print-section {
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    margin-bottom: 8pt !important;
-  }
-
-  .cv-print-pill {
-    border: 1px solid #cccccc !important;
-    background: #f9f9f9 !important;
+  .cv-print-bullets li {
+    list-style-type: disc !important;
+    margin-bottom: 1px !important;
+    font-size: 8pt !important;
+    line-height: 1.2 !important;
     color: #111111 !important;
-    padding: 1pt 5pt !important;
-    font-size: 8.5pt !important;
   }
 }
 
