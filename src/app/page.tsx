@@ -3,13 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import { 
-  MapPin, 
-  Maximize2, 
-  X, 
-  CheckCircle2, 
-  Send, 
-  Layers, 
+import {
+  MapPin,
+  Maximize2,
+  X,
+  CheckCircle2,
+  Send,
+  Layers,
   ArrowRight,
   AlertCircle
 } from 'lucide-react';
@@ -268,13 +268,13 @@ export default function HomePage() {
         </div>
         <div className="grid-line relative">
           <div className="grid-dot" style={{ top: `${((scrollProgress * 180 + 15) % 80) + 10}%` }} />
-          
+
           <div className="story-dashes">
             {[1, 2, 3, 4].map((i) => (
               <div key={i} className="story-dash">
-                <div 
-                  className="story-dash-fill" 
-                  style={{ height: getDashFill(i) }} 
+                <div
+                  className="story-dash-fill"
+                  style={{ height: getDashFill(i) }}
                 />
               </div>
             ))}
@@ -286,24 +286,24 @@ export default function HomePage() {
           CINEMATIC FIXED CONTAINER (Navbar + Skeuomorphic Stages)
       ======================================================== */}
       <div className="fixed inset-0 w-full h-full z-10 pointer-events-none flex flex-col justify-between px-6 sm:px-12 lg:px-16 py-5 box-border">
-        
+
         {/* ========================================================
             CLEAN NAVBAR (Logo + 4 Scroll Anchors + Tactile CTA)
         ======================================================== */}
         <header className="w-full flex items-center justify-between pointer-events-auto z-20">
           {/* Logo & Brand Identity */}
-          <div 
+          <div
             onClick={() => scrollToSlide(1)}
             className="flex items-center gap-3 cursor-pointer group"
           >
             <div className="relative w-9 h-9 rounded-xl overflow-hidden bg-[#161412]/85 border border-white/15 p-1 flex items-center justify-center shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_8px_20px_rgba(0,0,0,0.7)] group-hover:border-amber-400/50 transition-all">
-              <Image 
-                src="/images/logo.png" 
-                alt="Laztar Logo" 
-                width={36} 
-                height={36} 
+              <Image
+                src="/images/logo.png"
+                alt="Laztar Logo"
+                width={36}
+                height={36}
                 className="w-full h-full object-contain"
-                priority 
+                priority
               />
             </div>
             <div>
@@ -328,11 +328,10 @@ export default function HomePage() {
                 <button
                   key={item.slide}
                   onClick={() => scrollToSlide(item.slide)}
-                  className={`px-4 py-1.5 rounded-full transition-all cursor-pointer ${
-                    activeSlide === item.slide 
-                      ? 'bg-white/10 text-[#FFF6ED] font-medium shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)] border border-white/10' 
-                      : 'text-white/60 hover:text-white'
-                  }`}
+                  className={`px-4 py-1.5 rounded-full transition-all cursor-pointer ${activeSlide === item.slide
+                    ? 'bg-white/10 text-[#FFF6ED] font-medium shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)] border border-white/10'
+                    : 'text-white/60 hover:text-white'
+                    }`}
                 >
                   {item.name}
                 </button>
@@ -353,16 +352,15 @@ export default function HomePage() {
         {/* ========================================================
             STAGE 1: HERO - TOÀN CẢNH KIẾN TRÚC
         ======================================================== */}
-        <div 
-          className={`absolute bottom-[11%] left-6 sm:left-12 lg:left-16 transition-all duration-700 pointer-events-auto ${
-            activeSlide === 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
-          }`}
+        <div
+          className={`absolute bottom-[11%] left-6 sm:left-12 lg:left-16 transition-all duration-700 pointer-events-auto ${activeSlide === 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
+            }`}
         >
           <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-6 sm:p-8 max-w-lg">
             {/* Micro-Badge: 01 // SHOWCASE KIẾN TRÚC */}
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-sm text-[11px] font-medium tracking-[0.2em] text-[#FFF6ED]/80 uppercase mb-3 font-body">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
-              <span>01 // SHOWCASE KIẾN TRÚC</span>
+              <span>01. SHOWCASE KIẾN TRÚC</span>
             </div>
 
             {/* Title with White-to-Metallic Gradient */}
@@ -382,16 +380,15 @@ export default function HomePage() {
         {/* ========================================================
             STAGE 2: CẬN CẢNH & TIẾN VÀO SHOWROOM NỘI BỘ
         ======================================================== */}
-        <div 
-          className={`absolute bottom-[11%] left-6 sm:left-12 lg:left-16 transition-all duration-700 pointer-events-auto ${
-            activeSlide === 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
-          }`}
+        <div
+          className={`absolute bottom-[11%] left-6 sm:left-12 lg:left-16 transition-all duration-700 pointer-events-auto ${activeSlide === 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
+            }`}
         >
           <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-6 sm:p-8 max-w-lg">
             {/* Micro-Badge: 02 // KHÔNG GIAN NỘI KHU */}
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-sm text-[11px] font-medium tracking-[0.2em] text-[#FFF6ED]/80 uppercase mb-3 font-body">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
-              <span>02 // KHÔNG GIAN NỘI KHU</span>
+              <span>02. KHÔNG GIAN NỘI KHU</span>
             </div>
 
             <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-normal tracking-wider text-[#FFF6ED] mb-3">
@@ -409,10 +406,9 @@ export default function HomePage() {
         {/* ========================================================
             STAGE 3: SHOWROOM TRIỂN LÃM 3 DỰ ÁN TIÊU BIỂU
         ======================================================== */}
-        <div 
-          className={`absolute bottom-[7%] left-6 sm:left-12 lg:left-16 right-6 sm:right-12 lg:right-16 transition-all duration-700 ${
-            activeSlide === 3 ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-8 pointer-events-none'
-          }`}
+        <div
+          className={`absolute bottom-[7%] left-6 sm:left-12 lg:left-16 right-6 sm:right-12 lg:right-16 transition-all duration-700 ${activeSlide === 3 ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-8 pointer-events-none'
+            }`}
         >
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-5">
             {/* Left Description Card */}
@@ -420,7 +416,7 @@ export default function HomePage() {
               {/* Micro-Badge: 03 // SHOWROOM TRIỂN LÃM */}
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-sm text-[11px] font-medium tracking-[0.2em] text-[#FFF6ED]/80 uppercase mb-3 font-body">
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
-                <span>03 // SHOWROOM TRIỂN LÃM</span>
+                <span>03. SHOWROOM TRIỂN LÃM</span>
               </div>
 
               <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-normal tracking-wider text-[#FFF6ED] mb-2">
@@ -476,16 +472,15 @@ export default function HomePage() {
         {/* ========================================================
             STAGE 4: LIÊN HỆ & DỰ TOÁN BÁO GIÁ
         ======================================================== */}
-        <div 
-          className={`absolute bottom-[11%] left-6 sm:left-12 lg:left-16 transition-all duration-700 pointer-events-auto ${
-            activeSlide === 4 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
-          }`}
+        <div
+          className={`absolute bottom-[11%] left-6 sm:left-12 lg:left-16 transition-all duration-700 pointer-events-auto ${activeSlide === 4 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
+            }`}
         >
           <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-6 sm:p-8 max-w-lg">
             {/* Micro-Badge: 04 // LIÊN HỆ & DỰ TOÁN */}
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-sm text-[11px] font-medium tracking-[0.2em] text-[#FFF6ED]/80 uppercase mb-3 font-body">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
-              <span>04 // LIÊN HỆ &amp; DỰ TOÁN</span>
+              <span>04. LIÊN HỆ &amp; DỰ TOÁN</span>
             </div>
 
             <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-normal tracking-wider text-[#FFF6ED] mb-3">
@@ -519,7 +514,7 @@ export default function HomePage() {
           <div className="flex items-center gap-3 px-4 py-1.5 rounded-full bg-[#161412]/80 backdrop-blur-xl border border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
             <span className="text-[#C88A35] font-mono">0{activeSlide}</span>
             <div className="w-16 h-[2px] bg-white/15 rounded-full relative overflow-hidden">
-              <div 
+              <div
                 className="h-full bg-gradient-to-r from-[#C88A35] to-[#FFF6ED] transition-all duration-300"
                 style={{ width: `${(activeSlide / 4) * 100}%` }}
               />
@@ -533,7 +528,7 @@ export default function HomePage() {
           PROJECT DETAIL INTERACTIVE MODAL (Click on Card)
       ======================================================== */}
       {activeDetailProject && (
-        <div 
+        <div
           className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 animate-fadeIn pointer-events-auto"
           onClick={(e) => {
             if (e.target === e.currentTarget) setActiveDetailProject(null);
@@ -541,7 +536,7 @@ export default function HomePage() {
         >
           <div className="relative w-full max-w-3xl bg-[#161412]/95 backdrop-blur-2xl border border-white/15 rounded-3xl overflow-hidden shadow-[inset_0_1px_1px_rgba(255,255,255,0.2),0_24px_50px_rgba(0,0,0,0.9)] flex flex-col md:flex-row max-h-[90vh]">
             {/* Close Button */}
-            <button 
+            <button
               onClick={() => setActiveDetailProject(null)}
               className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-[#161412]/80 backdrop-blur-md border border-white/20 flex items-center justify-center text-white/80 hover:text-white hover:border-[#C88A35] transition-all cursor-pointer shadow-md"
             >
@@ -550,7 +545,7 @@ export default function HomePage() {
 
             {/* Left: Large Image Preview */}
             <div className="relative w-full md:w-1/2 h-60 md:h-auto min-h-[260px] bg-neutral-900">
-              <Image 
+              <Image
                 src={activeDetailProject.image}
                 alt={activeDetailProject.title}
                 fill
@@ -632,15 +627,15 @@ export default function HomePage() {
       {/* ========================================================
           LUXURY SKEUOMORPHIC CONSULTATION MODAL (Unified Validation)
       ======================================================== */}
-      <div 
-        id="contact-modal" 
+      <div
+        id="contact-modal"
         className={`${isContactOpen ? 'open' : ''} pointer-events-auto`}
         onClick={(e) => {
           if (e.target === e.currentTarget) setIsContactOpen(false);
         }}
       >
         <div className="bg-[#161412]/90 backdrop-blur-2xl border border-white/15 rounded-3xl p-8 sm:p-10 max-w-lg w-[92%] relative shadow-[inset_0_1px_1px_rgba(255,255,255,0.2),0_24px_50px_rgba(0,0,0,0.9)] transition-all">
-          <button 
+          <button
             onClick={() => setIsContactOpen(false)}
             className="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/5 border border-white/15 flex items-center justify-center text-white/70 hover:text-white hover:border-[#C88A35] transition-colors cursor-pointer text-lg"
           >
@@ -669,19 +664,18 @@ export default function HomePage() {
               <form onSubmit={handleContactSubmit} className="space-y-3.5">
                 {/* Full Name Field */}
                 <div>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     name="fullName"
                     value={formData.fullName}
                     onChange={handleInputChange}
                     onBlur={handleInputBlur}
-                    placeholder="HỌ VÀ TÊN CỦA BẠN *" 
-                    required 
-                    className={`w-full px-4 py-3 rounded-xl bg-white/5 border text-white text-xs placeholder:text-neutral-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)] focus:outline-none transition-colors ${
-                      formErrors.fullName && touchedFields.fullName
-                        ? 'border-red-400/50 focus:border-red-400'
-                        : 'border-white/10 focus:border-amber-500/50'
-                    }`}
+                    placeholder="HỌ VÀ TÊN CỦA BẠN *"
+                    required
+                    className={`w-full px-4 py-3 rounded-xl bg-white/5 border text-white text-xs placeholder:text-neutral-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)] focus:outline-none transition-colors ${formErrors.fullName && touchedFields.fullName
+                      ? 'border-red-400/50 focus:border-red-400'
+                      : 'border-white/10 focus:border-amber-500/50'
+                      }`}
                   />
                   {formErrors.fullName && touchedFields.fullName && (
                     <p className="text-xs text-red-400/90 mt-1 flex items-center gap-1 font-body">
@@ -693,19 +687,18 @@ export default function HomePage() {
 
                 {/* Phone Number Field */}
                 <div>
-                  <input 
-                    type="tel" 
+                  <input
+                    type="tel"
                     name="phoneNumber"
                     value={formData.phoneNumber}
                     onChange={handleInputChange}
                     onBlur={handleInputBlur}
-                    placeholder="SỐ ĐIỆN THOẠI LIÊN HỆ (VD: 0912 345 678) *" 
-                    required 
-                    className={`w-full px-4 py-3 rounded-xl bg-white/5 border text-white text-xs placeholder:text-neutral-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)] focus:outline-none transition-colors ${
-                      formErrors.phoneNumber && touchedFields.phoneNumber
-                        ? 'border-red-400/50 focus:border-red-400'
-                        : 'border-white/10 focus:border-amber-500/50'
-                    }`}
+                    placeholder="SỐ ĐIỆN THOẠI LIÊN HỆ (VD: 0912 345 678) *"
+                    required
+                    className={`w-full px-4 py-3 rounded-xl bg-white/5 border text-white text-xs placeholder:text-neutral-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)] focus:outline-none transition-colors ${formErrors.phoneNumber && touchedFields.phoneNumber
+                      ? 'border-red-400/50 focus:border-red-400'
+                      : 'border-white/10 focus:border-amber-500/50'
+                      }`}
                   />
                   {formErrors.phoneNumber && touchedFields.phoneNumber && (
                     <p className="text-xs text-red-400/90 mt-1 flex items-center gap-1 font-body">
@@ -717,19 +710,18 @@ export default function HomePage() {
 
                 {/* Email Field */}
                 <div>
-                  <input 
-                    type="email" 
+                  <input
+                    type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
                     onBlur={handleInputBlur}
-                    placeholder="ĐỊA CHỈ EMAIL (VD: contact@laztar.vn) *" 
-                    required 
-                    className={`w-full px-4 py-3 rounded-xl bg-white/5 border text-white text-xs placeholder:text-neutral-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)] focus:outline-none transition-colors ${
-                      formErrors.email && touchedFields.email
-                        ? 'border-red-400/50 focus:border-red-400'
-                        : 'border-white/10 focus:border-amber-500/50'
-                    }`}
+                    placeholder="ĐỊA CHỈ EMAIL (VD: contact@laztar.vn) *"
+                    required
+                    className={`w-full px-4 py-3 rounded-xl bg-white/5 border text-white text-xs placeholder:text-neutral-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)] focus:outline-none transition-colors ${formErrors.email && touchedFields.email
+                      ? 'border-red-400/50 focus:border-red-400'
+                      : 'border-white/10 focus:border-amber-500/50'
+                      }`}
                   />
                   {formErrors.email && touchedFields.email && (
                     <p className="text-xs text-red-400/90 mt-1 flex items-center gap-1 font-body">
@@ -741,12 +733,12 @@ export default function HomePage() {
 
                 {/* Project Details / Message */}
                 <div>
-                  <textarea 
+                  <textarea
                     name="message"
-                    rows={3} 
+                    rows={3}
                     value={formData.message}
                     onChange={handleInputChange}
-                    placeholder="THÔNG TIN CÔNG TRÌNH (Địa điểm, diện tích, quy mô...)" 
+                    placeholder="THÔNG TIN CÔNG TRÌNH (Địa điểm, diện tích, quy mô...)"
                     className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-xs placeholder:text-neutral-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)] focus:border-amber-500/50 focus:outline-none transition-colors resize-none"
                   />
                 </div>
