@@ -124,7 +124,7 @@ export default function PortfolioPage() {
       ======================================================== */}
       <header className="fixed top-0 left-0 right-0 z-40 px-4 sm:px-6 py-3.5 backdrop-blur-md bg-black/45 border-b border-white/10 transition-all print:hidden">
         <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
-          
+
           {/* Left Action: Return to 3D Showroom */}
           <Link
             href="/"
@@ -133,7 +133,7 @@ export default function PortfolioPage() {
             <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-amber-500/50 group-hover:scale-105 transition-all">
               <ArrowLeft className="w-4 h-4 text-amber-300 group-hover:-translate-x-0.5 transition-transform" />
             </div>
-            <span className="hidden sm:inline font-light tracking-widest font-sans">← 3D SHOWROOM LAZTAR</span>
+            <span className="hidden sm:inline font-light tracking-widest font-sans">3D SHOWROOM LAZTAR</span>
             <span className="sm:hidden font-light tracking-widest font-sans">← SHOWROOM</span>
           </Link>
 
@@ -197,7 +197,7 @@ export default function PortfolioPage() {
 
             <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-10">
               <div className="flex-1 space-y-6">
-                
+
                 {/* Single Refined Status Badge */}
                 <div>
                   <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] font-medium tracking-wider text-emerald-400 uppercase">
@@ -515,7 +515,7 @@ export default function PortfolioPage() {
                   <p className="text-sm text-neutral-200 leading-relaxed font-light font-sans tabular-nums lining-nums">
                     Nền tảng thuê trang phục cosplay đa người dùng hỗ trợ 3 phân quyền và hơn 80 RESTful APIs. Tích hợp AI chấm điểm dáng và đề xuất thông minh qua Gemini Multimodal, Vector Embeddings và Cosine Similarity. Tối ưu độ tin cậy của tiến trình AI dài bằng Spring Async và Transaction Template; đóng gói Docker và triển khai thực tế trên VPS.
                   </p>
-                  
+
                   {/* Highlights Bullet List */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                     <div className="flex items-start gap-2.5 text-xs text-neutral-100 font-sans tabular-nums lining-nums">
@@ -595,7 +595,7 @@ export default function PortfolioPage() {
                   <p className="text-sm text-neutral-200 leading-relaxed font-light font-sans tabular-nums lining-nums">
                     Hệ sinh thái đặt vé xem phim với 50+ RESTful APIs. Khóa ghế theo thời gian thực (Real-time seat locking) bằng SignalR, bảo mật JWT và tích hợp cổng thanh toán VNPay.
                   </p>
-                  
+
                   {/* Highlights Bullet List */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                     <div className="flex items-start gap-2.5 text-xs text-neutral-100 font-sans tabular-nums lining-nums">
@@ -672,7 +672,7 @@ export default function PortfolioPage() {
                   <p className="text-sm text-neutral-200 leading-relaxed font-light font-sans tabular-nums lining-nums">
                     Ứng dụng quản lý hồ và cá Koi thông qua 50+ APIs, cấu hình phân quyền bảo mật với Spring Security và quản trị dữ liệu qua Spring Data JPA.
                   </p>
-                  
+
                   {/* Highlights Bullet List */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                     <div className="flex items-start gap-2.5 text-xs text-neutral-100 font-sans tabular-nums lining-nums">
@@ -740,7 +740,7 @@ export default function PortfolioPage() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
+
             {/* Timeline: Experience & Education (2 Columns) */}
             <div className="lg:col-span-2 bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-8">
               <div className="relative border-l border-amber-500/30 pl-6 ml-3 space-y-8">
@@ -878,7 +878,7 @@ export default function PortfolioPage() {
 
             {/* Direct Contact Cards */}
             <div className="pt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-sans">
-              
+
               {/* Email */}
               <div
                 onClick={handleCopyEmail}
@@ -960,7 +960,7 @@ export default function PortfolioPage() {
       {isCvModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in cv-modal-overlay">
           <div className="relative w-full max-w-4xl max-h-[92vh] overflow-y-auto bg-[#191613] border border-amber-500/30 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.95)] p-6 sm:p-8 text-[#FFF6ED] cv-modal-card">
-            
+
             {/* Modal Header & Pill Toolbar (Hidden in Print) */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-white/10 gap-4 no-print">
               <div className="flex items-center gap-2.5">
@@ -1004,7 +1004,7 @@ export default function PortfolioPage() {
 
             {/* Modal Body / Printable Minimalist Tech Resume (Dual-mode: Screen Dark Mode & Print Clean 1-Page A4) */}
             <div id="printable-cv" className="py-4 space-y-4 text-sm text-neutral-100 font-sans tabular-nums lining-nums">
-              
+
               {/* Header */}
               <div className="cv-print-header text-center pb-2 border-b border-white/10 print:border-black print:pb-1">
                 <h1 className="font-sans text-2xl font-bold uppercase tracking-wide text-[#FFF6ED] print:text-black">
@@ -1061,7 +1061,7 @@ export default function PortfolioPage() {
                   DỰ ÁN TIÊU BIỂU
                 </div>
                 <div className="space-y-3 text-xs font-sans">
-                  
+
                   {/* Project 1 */}
                   <div className="cv-print-item">
                     <div className="flex flex-wrap items-baseline justify-between gap-1">
