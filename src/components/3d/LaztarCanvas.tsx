@@ -7,6 +7,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 interface LaztarCanvasProps {
   scrollProgress?: number;
   onLoaded?: () => void;
+  loadModel?: boolean;
 }
 
 // Exponential inertia damping helper using THREE.MathUtils.damp
@@ -19,6 +20,7 @@ function dampVector3(current: THREE.Vector3, target: THREE.Vector3, lambda: numb
 export default function LaztarCanvas({
   scrollProgress = 0,
   onLoaded,
+  loadModel = true,
 }: LaztarCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -285,135 +287,142 @@ export default function LaztarCanvas({
     scene.add(showroomSpot);
     scene.add(showroomSpot.target);
 
-    // Texture Loader for 3 Project Canvases
-    const textureLoader = new THREE.TextureLoader();
-    const textures = {
-      canvas1: textureLoader.load('/images/projects/villa.jpg', (t) => { t.colorSpace = THREE.SRGBColorSpace; }),
-      canvas2: textureLoader.load('/images/projects/tower.jpg', (t) => { t.colorSpace = THREE.SRGBColorSpace; }),
-      canvas3: textureLoader.load('/images/projects/eco.jpg', (t) => { t.colorSpace = THREE.SRGBColorSpace; }),
-    };
+    // Load model & textures only if loadModel is true
+    if (loadModel) {
+      // Texture Loader for 3 Project Canvases
+      const textureLoader = new THREE.TextureLoader();
+      const textures = {
+        canvas1: textureLoader.load('/images/projects/villa.jpg', (t) => { t.colorSpace = THREE.SRGBColorSpace; }),
+        canvas2: textureLoader.load('/images/projects/tower.jpg', (t) => { t.colorSpace = THREE.SRGBColorSpace; }),
+        canvas3: textureLoader.load('/images/projects/eco.jpg', (t) => { t.colorSpace = THREE.SRGBColorSpace; }),
+      };
 
-    // Load building.glb
-    const gltfLoader = new GLTFLoader();
-    gltfLoader.load(
-      '/models/building.glb',
-      (gltf) => {
-        if (!isMounted) return;
-        const model = gltf.scene;
-        modelPivot.add(model);
+      // Load building.glb
+      const gltfLoader = new GLTFLoader();
+      gltfLoader.load(
+        '/models/building.glb',
+        (gltf) => {
+          if (!isMounted) return;
+          const model = gltf.scene;
+          modelPivot.add(model);
 
-        // Auto-center & Scale
-        const boxInitial = new THREE.Box3().setFromObject(model);
-        const sizeInitial = boxInitial.getSize(new THREE.Vector3());
-        const maxDim = Math.max(sizeInitial.x, sizeInitial.y, sizeInitial.z);
-        const targetScale = 3.6 / (maxDim > 0.0001 ? maxDim : 1);
-        model.scale.setScalar(targetScale);
+          // Auto-center & Scale
+          const boxInitial = new THREE.Box3().setFromObject(model);
+          const sizeInitial = boxInitial.getSize(new THREE.Vector3());
+          const maxDim = Math.max(sizeInitial.x, sizeInitial.y, sizeInitial.z);
+          const targetScale = 3.6 / (maxDim > 0.0001 ? maxDim : 1);
+          model.scale.setScalar(targetScale);
 
-        model.updateMatrixWorld(true);
+          model.updateMatrixWorld(true);
 
-        const boxScaled = new THREE.Box3().setFromObject(model);
-        const centerScaled = boxScaled.getCenter(new THREE.Vector3());
+          const boxScaled = new THREE.Box3().setFromObject(model);
+          const centerScaled = boxScaled.getCenter(new THREE.Vector3());
 
-        model.position.sub(centerScaled);
-        modelPivot.position.y = -0.2;
-        modelPivot.updateMatrixWorld(true);
+          model.position.sub(centerScaled);
+          modelPivot.position.y = -0.2;
+          modelPivot.updateMatrixWorld(true);
 
-        // Traverse & Apply Project Textures & PBR Materials
-        model.traverse((child: any) => {
-          if (child.isMesh) {
-            const name = child.name || '';
+          // Traverse & Apply Project Textures & PBR Materials
+          model.traverse((child: any) => {
+            if (child.isMesh) {
+              const name = child.name || '';
 
-            // Showroom Ceiling & Slab: Apply polygonOffset to prevent z-fighting and flickering
-            const isCeilingOrSlab = 
-              name === 'Stone_MidFloorSlab' ||
-              name.toLowerCase().includes('midfloor') ||
-              name.toLowerCase().includes('ceiling') ||
-              name.toLowerCase().includes('roof') ||
-              name.toLowerCase().includes('slab') ||
-              name.toLowerCase().includes('lobbyfloor');
+              // Showroom Ceiling & Slab: Apply polygonOffset to prevent z-fighting and flickering
+              const isCeilingOrSlab = 
+                name === 'Stone_MidFloorSlab' ||
+                name.toLowerCase().includes('midfloor') ||
+                name.toLowerCase().includes('ceiling') ||
+                name.toLowerCase().includes('roof') ||
+                name.toLowerCase().includes('slab') ||
+                name.toLowerCase().includes('lobbyfloor');
 
-            if (isCeilingOrSlab) {
-              const applyPolygonOffset = (mat: any) => {
-                if (!mat) return;
-                mat.polygonOffset = true;
-                mat.polygonOffsetFactor = -1.0;
-                mat.polygonOffsetUnits = -4.0;
-                mat.needsUpdate = true;
-              };
-              if (Array.isArray(child.material)) {
-                child.material.forEach(applyPolygonOffset);
-              } else {
-                applyPolygonOffset(child.material);
+              if (isCeilingOrSlab) {
+                const applyPolygonOffset = (mat: any) => {
+                  if (!mat) return;
+                  mat.polygonOffset = true;
+                  mat.polygonOffsetFactor = -1.0;
+                  mat.polygonOffsetUnits = -4.0;
+                  mat.needsUpdate = true;
+                };
+                if (Array.isArray(child.material)) {
+                  child.material.forEach(applyPolygonOffset);
+                } else {
+                  applyPolygonOffset(child.material);
+                }
+                child.castShadow = false;
+                child.receiveShadow = false;
               }
-              child.castShadow = false;
-              child.receiveShadow = false;
-            }
 
-            // 1. Assign project textures to the 3 interior canvases
-            if (name === 'Showroom_Canvas_1') {
-              child.material = new THREE.MeshBasicMaterial({ map: textures.canvas1 });
-            } else if (name === 'Showroom_Canvas_2') {
-              child.material = new THREE.MeshBasicMaterial({ map: textures.canvas2 });
-              // Obtain world position of center canvas for showroom anchor
-              child.getWorldPosition(showroomAnchor);
-              showroomSpot.position.set(showroomAnchor.x, showroomAnchor.y + 1.2, showroomAnchor.z + 1.2);
-              showroomSpot.target.position.copy(showroomAnchor);
-              showroomSpot.target.updateMatrixWorld();
-            } else if (name === 'Showroom_Canvas_3') {
-              child.material = new THREE.MeshBasicMaterial({ map: textures.canvas3 });
-            }
+              // 1. Assign project textures to the 3 interior canvases
+              if (name === 'Showroom_Canvas_1') {
+                child.material = new THREE.MeshBasicMaterial({ map: textures.canvas1 });
+              } else if (name === 'Showroom_Canvas_2') {
+                child.material = new THREE.MeshBasicMaterial({ map: textures.canvas2 });
+                // Obtain world position of center canvas for showroom anchor
+                child.getWorldPosition(showroomAnchor);
+                showroomSpot.position.set(showroomAnchor.x, showroomAnchor.y + 1.2, showroomAnchor.z + 1.2);
+                showroomSpot.target.position.copy(showroomAnchor);
+                showroomSpot.target.updateMatrixWorld();
+              } else if (name === 'Showroom_Canvas_3') {
+                child.material = new THREE.MeshBasicMaterial({ map: textures.canvas3 });
+              }
 
-            // 2. Architectural Glass Materials (Transparent so showroom is visible through windows)
-            if (name.toLowerCase().includes('glass_lobby') || name.toLowerCase().includes('glass_')) {
-              child.material = new THREE.MeshPhysicalMaterial({
-                color: new THREE.Color('#94d0ea'),
-                roughness: 0.04,
-                metalness: 0.1,
-                transmission: 0.88,
-                transparent: true,
-                opacity: 0.7,
-                ior: 1.5,
-                side: THREE.DoubleSide,
-                depthWrite: false,
-              });
-            } else if (name === 'Frosted_ShowroomWall') {
-              // Frosted Dark Glass Partition Wall
-              child.material = new THREE.MeshPhysicalMaterial({
-                color: new THREE.Color('#101319'),
-                roughness: 0.28,
-                metalness: 0.35,
-                transmission: 0.6,
-                transparent: true,
-                opacity: 0.92,
-                side: THREE.DoubleSide,
-              });
-            } else if (name.toLowerCase().includes('gold')) {
-              child.material = new THREE.MeshStandardMaterial({
-                color: new THREE.Color('#d4af37'),
-                roughness: 0.22,
-                metalness: 0.95,
-              });
-            } else if (name.toLowerCase().includes('core')) {
-              child.material = new THREE.MeshStandardMaterial({
-                color: new THREE.Color('#ffe29e'),
-                emissive: new THREE.Color('#ffa826'),
-                emissiveIntensity: 0.75,
-                roughness: 0.3,
-              });
+              // 2. Architectural Glass Materials (Transparent so showroom is visible through windows)
+              if (name.toLowerCase().includes('glass_lobby') || name.toLowerCase().includes('glass_')) {
+                child.material = new THREE.MeshPhysicalMaterial({
+                  color: new THREE.Color('#94d0ea'),
+                  roughness: 0.04,
+                  metalness: 0.1,
+                  transmission: 0.88,
+                  transparent: true,
+                  opacity: 0.7,
+                  ior: 1.5,
+                  side: THREE.DoubleSide,
+                  depthWrite: false,
+                });
+              } else if (name === 'Frosted_ShowroomWall') {
+                // Frosted Dark Glass Partition Wall
+                child.material = new THREE.MeshPhysicalMaterial({
+                  color: new THREE.Color('#101319'),
+                  roughness: 0.28,
+                  metalness: 0.35,
+                  transmission: 0.6,
+                  transparent: true,
+                  opacity: 0.92,
+                  side: THREE.DoubleSide,
+                });
+              } else if (name.toLowerCase().includes('gold')) {
+                child.material = new THREE.MeshStandardMaterial({
+                  color: new THREE.Color('#d4af37'),
+                  roughness: 0.22,
+                  metalness: 0.95,
+                });
+              } else if (name.toLowerCase().includes('core')) {
+                child.material = new THREE.MeshStandardMaterial({
+                  color: new THREE.Color('#ffe29e'),
+                  emissive: new THREE.Color('#ffa826'),
+                  emissiveIntensity: 0.75,
+                  roughness: 0.3,
+                });
+              }
             }
+          });
+
+          if (onLoadedRef.current) {
+            onLoadedRef.current();
           }
-        });
-
-        if (onLoadedRef.current) {
-          onLoadedRef.current();
+        },
+        undefined,
+        (err) => {
+          console.error('Error loading building model:', err);
+          if (onLoadedRef.current) onLoadedRef.current();
         }
-      },
-      undefined,
-      (err) => {
-        console.error('Error loading building model:', err);
-        if (onLoadedRef.current) onLoadedRef.current();
+      );
+    } else {
+      if (onLoadedRef.current) {
+        onLoadedRef.current();
       }
-    );
+    }
 
     // 7. Resize Listener (No mouse tracking - 100% scroll driven for performance)
     const onResize = () => {
@@ -466,46 +475,54 @@ export default function LaztarCanvas({
       // Chặng 3 (0.50 -> 0.78): Đứng trong phòng đối diện 3 khung tranh trên vách kính mờ
       // Chặng 4 (0.78 -> 1.00): Rút nhẹ góc cao nghệ thuật hoàng hôn cho mục dự toán
       // ========================================================
-      const sX = showroomAnchor.x;
-      const sY = showroomAnchor.y;
-      const sZ = showroomAnchor.z;
+      if (loadModel) {
+        const sX = showroomAnchor.x;
+        const sY = showroomAnchor.y;
+        const sZ = showroomAnchor.z;
 
-      if (p <= 0.25) {
-        // Stage 1: Exterior 3/4 Panorama
-        const t = p / 0.25;
-        targetCameraPos.set(
-          sX + 2.5 - t * 0.8,
-          sY + 2.0 - t * 0.6,
-          sZ + 4.8 - t * 1.5
-        );
-        targetLookAt.set(sX - 0.3 + t * 0.2, sY + 0.8 - t * 0.4, sZ);
-      } else if (p <= 0.50) {
-        // Stage 2: Gliding directly INTO the showroom room through the glass facade
-        const t = (p - 0.25) / 0.25;
-        targetCameraPos.set(
-          sX + 1.7 * (1 - t),
-          sY + 1.4 - t * 1.35,
-          sZ + 3.3 - t * 1.6
-        );
-        targetLookAt.set(sX - 0.1 * (1 - t), sY + 0.4 - t * 0.35, sZ);
-      } else if (p <= 0.78) {
-        // Stage 3: Inside Showroom Room facing the 3 project frames
-        const t = (p - 0.50) / 0.28;
-        targetCameraPos.set(
-          sX + Math.sin(t * Math.PI) * 0.12,
-          sY + 0.05,
-          sZ + 1.7 - t * 0.08
-        );
-        targetLookAt.set(sX, sY + 0.05, sZ);
+        if (p <= 0.25) {
+          // Stage 1: Exterior 3/4 Panorama
+          const t = p / 0.25;
+          targetCameraPos.set(
+            sX + 2.5 - t * 0.8,
+            sY + 2.0 - t * 0.6,
+            sZ + 4.8 - t * 1.5
+          );
+          targetLookAt.set(sX - 0.3 + t * 0.2, sY + 0.8 - t * 0.4, sZ);
+        } else if (p <= 0.50) {
+          // Stage 2: Gliding directly INTO the showroom room through the glass facade
+          const t = (p - 0.25) / 0.25;
+          targetCameraPos.set(
+            sX + 1.7 * (1 - t),
+            sY + 1.4 - t * 1.35,
+            sZ + 3.3 - t * 1.6
+          );
+          targetLookAt.set(sX - 0.1 * (1 - t), sY + 0.4 - t * 0.35, sZ);
+        } else if (p <= 0.78) {
+          // Stage 3: Inside Showroom Room facing the 3 project frames
+          const t = (p - 0.50) / 0.28;
+          targetCameraPos.set(
+            sX + Math.sin(t * Math.PI) * 0.12,
+            sY + 0.05,
+            sZ + 1.7 - t * 0.08
+          );
+          targetLookAt.set(sX, sY + 0.05, sZ);
+        } else {
+          // Stage 4: Elevated Twilight Perspective for Consultation
+          const t = (p - 0.78) / 0.22;
+          targetCameraPos.set(
+            sX - 2.6 * t,
+            sY + 0.05 + t * 2.2,
+            sZ + 1.62 + t * 2.8
+          );
+          targetLookAt.set(sX, sY + 0.6 * t, sZ);
+        }
       } else {
-        // Stage 4: Elevated Twilight Perspective for Consultation
-        const t = (p - 0.78) / 0.22;
-        targetCameraPos.set(
-          sX - 2.6 * t,
-          sY + 0.05 + t * 2.2,
-          sZ + 1.62 + t * 2.8
-        );
-        targetLookAt.set(sX, sY + 0.6 * t, sZ);
+        // Ambient organic drift for portfolio page
+        const floatY = Math.sin(elapsedTime * 0.35) * 0.12;
+        const floatX = Math.cos(elapsedTime * 0.25) * 0.18;
+        targetCameraPos.set(floatX, 1.8 + floatY - p * 0.8, 4.8);
+        targetLookAt.set(0, 0.2 - p * 0.8, 0);
       }
 
       // Smooth Inertia Damping (dampVector3 via THREE.MathUtils.damp)
@@ -528,10 +545,13 @@ export default function LaztarCanvas({
       window.removeEventListener('resize', onResize);
       renderer.dispose();
     };
-  }, []);
+  }, [loadModel]);
 
   return (
-    <div id="webgl-canvas-container" className="fixed inset-0 w-full h-full pointer-events-auto">
+    <div
+      id="webgl-canvas-container"
+      className={`fixed inset-0 w-full h-full ${loadModel ? 'pointer-events-auto' : 'pointer-events-none'}`}
+    >
       <canvas ref={canvasRef} className="w-full h-full block outline-none" />
     </div>
   );
