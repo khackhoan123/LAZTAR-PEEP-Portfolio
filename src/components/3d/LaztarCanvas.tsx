@@ -46,9 +46,10 @@ export default function LaztarCanvas({
       width: window.innerWidth,
       height: window.innerHeight,
     };
+    const isPortrait = sizes.width < 768 || sizes.width / sizes.height < 1.0;
 
     const camera = new THREE.PerspectiveCamera(
-      45,
+      isPortrait ? 54 : 45,
       sizes.width / sizes.height,
       0.5,
       500
@@ -181,7 +182,7 @@ export default function LaztarCanvas({
       logarithmicDepthBuffer: true,
     });
     renderer.setSize(sizes.width, sizes.height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.2)); // DPR capped at 1.2
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isPortrait ? 1.0 : 1.2)); // Capped at 1.0 on mobile for 60FPS
     renderer.shadowMap.enabled = false; // Shadows disabled for 60FPS
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.8;
@@ -220,7 +221,8 @@ export default function LaztarCanvas({
       return new THREE.CanvasTexture(canvasElement);
     }
 
-    const sparkCount = 280;
+    // 50% fewer sparks on mobile to save GPU & battery
+    const sparkCount = isPortrait ? 140 : 280;
     const sparkPositions = new Float32Array(sparkCount * 3);
     const sparkColors = new Float32Array(sparkCount * 3);
     const sparkData: Array<{
@@ -319,7 +321,8 @@ export default function LaztarCanvas({
           const centerScaled = boxScaled.getCenter(new THREE.Vector3());
 
           model.position.sub(centerScaled);
-          modelPivot.position.y = -0.2;
+          // Shift model up on mobile portrait (0.28) so lower screen has room for text cards
+          modelPivot.position.y = isPortrait ? 0.28 : -0.2;
           modelPivot.updateMatrixWorld(true);
 
           // Traverse & Apply Project Textures & PBR Materials
@@ -428,11 +431,17 @@ export default function LaztarCanvas({
     const onResize = () => {
       sizes.width = window.innerWidth;
       sizes.height = window.innerHeight;
+      const currentIsPortrait = sizes.width < 768 || sizes.width / sizes.height < 1.0;
+      camera.fov = currentIsPortrait ? 54 : 45;
       camera.aspect = sizes.width / sizes.height;
       camera.updateProjectionMatrix();
       renderer.setSize(sizes.width, sizes.height);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.2));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, currentIsPortrait ? 1.0 : 1.2));
       shaderUniforms.uResolution.value.set(sizes.width, sizes.height);
+      if (loadModel) {
+        modelPivot.position.y = currentIsPortrait ? 0.28 : -0.2;
+        modelPivot.updateMatrixWorld(true);
+      }
     };
     window.addEventListener('resize', onResize);
 
@@ -469,26 +478,29 @@ export default function LaztarCanvas({
       sparkParticles.geometry.attributes.position.needsUpdate = true;
 
       // ========================================================
-      // 4-STAGE CAMERA TRAJECTORY TIMELINE (100% Inside Enclosed Showroom)
+      // 4-STAGE CAMERA TRAJECTORY TIMELINE (Mobile Responsive Distance)
       // Chặng 1 (0.00 -> 0.25): Toàn cảnh ngoại thất tòa nhà
       // Chặng 2 (0.25 -> 0.50): Lướt xuyên kính tiến vào phòng showroom
       // Chặng 3 (0.50 -> 0.78): Đứng trong phòng đối diện 3 khung tranh trên vách kính mờ
       // Chặng 4 (0.78 -> 1.00): Rút nhẹ góc cao nghệ thuật hoàng hôn cho mục dự toán
       // ========================================================
+      const currentIsPortrait = sizes.width < 768 || sizes.width / sizes.height < 1.0;
+      const mobileDist = currentIsPortrait ? 1.35 : 1.0;
+
       if (loadModel) {
         const sX = showroomAnchor.x;
         const sY = showroomAnchor.y;
         const sZ = showroomAnchor.z;
 
         if (p <= 0.25) {
-          // Stage 1: Exterior 3/4 Panorama
+          // Stage 1: Exterior 3/4 Panorama - pull back on mobile so building is 100% visible
           const t = p / 0.25;
           targetCameraPos.set(
-            sX + 2.5 - t * 0.8,
-            sY + 2.0 - t * 0.6,
-            sZ + 4.8 - t * 1.5
+            (sX + 2.5 - t * 0.8) * (currentIsPortrait ? 1.15 : 1.0),
+            (sY + 2.0 - t * 0.6) * (currentIsPortrait ? 1.1 : 1.0),
+            (sZ + 4.8 - t * 1.5) * mobileDist
           );
-          targetLookAt.set(sX - 0.3 + t * 0.2, sY + 0.8 - t * 0.4, sZ);
+          targetLookAt.set(sX - 0.3 + t * 0.2, sY + (currentIsPortrait ? 0.45 : 0.8) - t * 0.4, sZ);
         } else if (p <= 0.50) {
           // Stage 2: Gliding directly INTO the showroom room through the glass facade
           const t = (p - 0.25) / 0.25;
@@ -504,24 +516,24 @@ export default function LaztarCanvas({
           targetCameraPos.set(
             sX + Math.sin(t * Math.PI) * 0.12,
             sY + 0.05,
-            sZ + 1.7 - t * 0.08
+            (sZ + 1.7 - t * 0.08) * (currentIsPortrait ? 1.15 : 1.0)
           );
           targetLookAt.set(sX, sY + 0.05, sZ);
         } else {
           // Stage 4: Elevated Twilight Perspective for Consultation
           const t = (p - 0.78) / 0.22;
           targetCameraPos.set(
-            sX - 2.6 * t,
+            (sX - 2.6 * t) * (currentIsPortrait ? 1.1 : 1.0),
             sY + 0.05 + t * 2.2,
-            sZ + 1.62 + t * 2.8
+            (sZ + 1.62 + t * 2.8) * (currentIsPortrait ? 1.25 : 1.0)
           );
-          targetLookAt.set(sX, sY + 0.6 * t, sZ);
+          targetLookAt.set(sX, sY + (currentIsPortrait ? 0.35 : 0.6) * t, sZ);
         }
       } else {
         // Ambient organic drift for portfolio page
         const floatY = Math.sin(elapsedTime * 0.35) * 0.12;
         const floatX = Math.cos(elapsedTime * 0.25) * 0.18;
-        targetCameraPos.set(floatX, 1.8 + floatY - p * 0.8, 4.8);
+        targetCameraPos.set(floatX, (1.8 + floatY - p * 0.8) * (currentIsPortrait ? 1.1 : 1.0), 4.8 * mobileDist);
         targetLookAt.set(0, 0.2 - p * 0.8, 0);
       }
 

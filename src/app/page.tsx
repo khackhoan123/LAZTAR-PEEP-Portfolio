@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import Image from 'next/image';
 import {
   MapPin,
@@ -227,7 +228,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="relative w-full min-h-[500vh] bg-black select-none font-sans">
+    <div className="relative w-full max-w-full overflow-x-hidden min-h-[500vh] bg-black select-none font-sans">
       {/* ========================================================
           1. LUMINOUS GLOW CURSOR (OGL WebGL Shader)
       ======================================================== */}
@@ -285,18 +286,18 @@ export default function HomePage() {
       {/* ========================================================
           CINEMATIC FIXED CONTAINER (Navbar + Skeuomorphic Stages)
       ======================================================== */}
-      <div className="fixed inset-0 w-full h-full z-10 pointer-events-none flex flex-col justify-between px-6 sm:px-12 lg:px-16 py-5 box-border">
+      <div className="fixed inset-0 w-full h-full z-10 pointer-events-none flex flex-col justify-between px-4 sm:px-12 lg:px-16 py-3.5 sm:py-5 box-border">
 
         {/* ========================================================
             CLEAN NAVBAR (Logo + 4 Scroll Anchors + Tactile CTA)
         ======================================================== */}
-        <header className="w-full flex items-center justify-between pointer-events-auto z-20">
+        <header className="w-full flex items-center justify-between pointer-events-auto z-20 gap-2">
           {/* Logo & Brand Identity */}
           <div
             onClick={() => scrollToSlide(1)}
-            className="flex items-center gap-3 cursor-pointer group"
+            className="flex items-center gap-2 sm:gap-3 cursor-pointer group shrink-0"
           >
-            <div className="relative w-9 h-9 rounded-xl overflow-hidden bg-[#161412]/85 border border-white/15 p-1 flex items-center justify-center shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_8px_20px_rgba(0,0,0,0.7)] group-hover:border-amber-400/50 transition-all">
+            <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-xl overflow-hidden bg-[#161412]/85 border border-white/15 p-1 flex items-center justify-center shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_8px_20px_rgba(0,0,0,0.7)] group-hover:border-amber-400/50 transition-all">
               <Image
                 src="/images/logo.png"
                 alt="Laztar Logo"
@@ -307,17 +308,17 @@ export default function HomePage() {
               />
             </div>
             <div>
-              <span className="font-sans text-base tracking-[0.2em] text-white block leading-none group-hover:text-amber-300 transition-colors font-semibold">
+              <span className="font-sans text-sm sm:text-base tracking-[0.2em] text-white block leading-none group-hover:text-amber-300 transition-colors font-semibold">
                 LAZTAR
               </span>
-              <span className="text-[9px] tracking-[0.25em] text-[#C88A35] uppercase font-medium">
+              <span className="text-[8px] sm:text-[9px] tracking-[0.25em] text-[#C88A35] uppercase font-medium">
                 CONSTRUCTION
               </span>
             </div>
           </div>
 
-          {/* 4 Scroll Anchors + Tactile Pill CTA */}
-          <div className="flex items-center gap-4 sm:gap-6">
+          {/* 4 Scroll Anchors + Portfolio Link + Tactile Pill CTA */}
+          <div className="flex items-center gap-2 sm:gap-4">
             <nav className="hidden md:flex items-center gap-1.5 p-1.5 rounded-full bg-[#161412]/80 backdrop-blur-xl border border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_8px_24px_rgba(0,0,0,0.6)] text-xs uppercase tracking-[2px]">
               {[
                 { name: 'Kiến Trúc', slide: 1 },
@@ -338,10 +339,20 @@ export default function HomePage() {
               ))}
             </nav>
 
+            {/* Quick Switch to /portfolio */}
+            <Link
+              href="/portfolio"
+              className="rounded-full px-3 py-1.5 sm:px-4 sm:py-2.5 bg-amber-500/10 border border-amber-500/30 text-amber-200 hover:bg-amber-500/20 hover:border-amber-400 text-[10px] sm:text-[11px] uppercase tracking-wider font-semibold transition-all inline-flex items-center gap-1 sm:gap-1.5 font-sans min-h-[34px] sm:min-h-[38px] shrink-0"
+              title="Xem Hồ Sơ Cá Nhân"
+            >
+              <span>Portfolio</span>
+              <ArrowRight className="w-3 h-3 text-amber-300" />
+            </Link>
+
             {/* Tactile Button: CTA Liên Hệ */}
             <button
               onClick={() => setIsContactOpen(true)}
-              className="rounded-full px-6 py-2.5 bg-gradient-to-b from-[#FFF6ED] to-[#E2D5C5] text-black font-semibold text-[11px] uppercase tracking-wider shadow-[0_3px_8px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,1)] hover:brightness-105 active:scale-95 transition-all cursor-pointer inline-flex items-center gap-2"
+              className="rounded-full px-3.5 py-1.5 sm:px-6 sm:py-2.5 bg-gradient-to-b from-[#FFF6ED] to-[#E2D5C5] text-black font-semibold text-[10px] sm:text-[11px] uppercase tracking-wider shadow-[0_3px_8px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,1)] hover:brightness-105 active:scale-95 transition-all cursor-pointer inline-flex items-center gap-1.5 sm:gap-2 min-h-[34px] sm:min-h-[38px] shrink-0"
             >
               <span>Liên Hệ</span>
               <span className="w-1.5 h-1.5 rounded-full bg-black/80" />
@@ -353,25 +364,25 @@ export default function HomePage() {
             STAGE 1: HERO - TOÀN CẢNH KIẾN TRÚC
         ======================================================== */}
         <div
-          className={`absolute bottom-[11%] left-6 sm:left-12 lg:left-16 transition-all duration-700 pointer-events-auto ${activeSlide === 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
+          className={`absolute bottom-[9%] sm:bottom-[11%] left-4 sm:left-12 lg:left-16 right-4 sm:right-auto transition-all duration-700 pointer-events-auto ${activeSlide === 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
             }`}
         >
-          <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-6 sm:p-8 max-w-lg">
+          <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-4 sm:p-6 lg:p-8 w-full sm:max-w-lg">
             {/* Micro-Badge: 01 // SHOWCASE KIẾN TRÚC */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-sm text-[11px] font-medium tracking-[0.2em] text-[#FFF6ED]/80 uppercase mb-3 font-body">
+            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-sm text-[10px] sm:text-[11px] font-medium tracking-[0.2em] text-[#FFF6ED]/80 uppercase mb-2 sm:mb-3 font-body">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
               <span>01. SHOWCASE KIẾN TRÚC</span>
             </div>
 
             {/* Title with White-to-Metallic Gradient */}
-            <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-normal tracking-wider text-[#FFF6ED] mb-3">
+            <h1 className="font-heading text-2xl sm:text-4xl lg:text-5xl font-normal tracking-wider text-[#FFF6ED] mb-2 sm:mb-3">
               <span className="block bg-clip-text text-transparent bg-gradient-to-b from-[#FFF6ED] via-[#f7eee4] to-[#C8B8A6]">
                 Kiến Trúc &amp; Tầm Vóc
               </span>
             </h1>
 
             {/* Contrast-Rich Description */}
-            <p className="font-body font-light text-sm text-[#d1d5db] leading-relaxed">
+            <p className="font-body font-light text-xs sm:text-sm text-[#d1d5db] leading-relaxed">
               Khởi sinh từ tư duy quy hoạch chuẩn mực và kỹ nghệ thi công tinh xảo của Laztar. Mỗi công trình là một biểu tượng trường tồn, dung hòa tuyệt đối giữa công năng hiện đại và thẩm mỹ vị lai.
             </p>
           </div>
@@ -381,23 +392,23 @@ export default function HomePage() {
             STAGE 2: CẬN CẢNH & TIẾN VÀO SHOWROOM NỘI BỘ
         ======================================================== */}
         <div
-          className={`absolute bottom-[11%] left-6 sm:left-12 lg:left-16 transition-all duration-700 pointer-events-auto ${activeSlide === 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
+          className={`absolute bottom-[9%] sm:bottom-[11%] left-4 sm:left-12 lg:left-16 right-4 sm:right-auto transition-all duration-700 pointer-events-auto ${activeSlide === 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
             }`}
         >
-          <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-6 sm:p-8 max-w-lg">
+          <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-4 sm:p-6 lg:p-8 w-full sm:max-w-lg">
             {/* Micro-Badge: 02 // KHÔNG GIAN NỘI KHU */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-sm text-[11px] font-medium tracking-[0.2em] text-[#FFF6ED]/80 uppercase mb-3 font-body">
+            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-sm text-[10px] sm:text-[11px] font-medium tracking-[0.2em] text-[#FFF6ED]/80 uppercase mb-2 sm:mb-3 font-body">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
               <span>02. KHÔNG GIAN NỘI KHU</span>
             </div>
 
-            <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-normal tracking-wider text-[#FFF6ED] mb-3">
+            <h2 className="font-heading text-2xl sm:text-4xl lg:text-5xl font-normal tracking-wider text-[#FFF6ED] mb-2 sm:mb-3">
               <span className="block bg-clip-text text-transparent bg-gradient-to-b from-[#FFF6ED] via-[#f7eee4] to-[#C8B8A6]">
                 Quy Hoạch &amp; Cảnh Quan
               </span>
             </h2>
 
-            <p className="font-body font-light text-sm text-[#d1d5db] leading-relaxed">
+            <p className="font-body font-light text-xs sm:text-sm text-[#d1d5db] leading-relaxed">
               Bước qua lớp kính tràn viền vào không gian triển lãm nội khu. Nơi hội tụ các giải pháp kết cấu vượt nhịp, mặt nước sinh thái và nghệ thuật hoàn thiện bề mặt tiêu chuẩn quốc tế.
             </p>
           </div>
@@ -407,19 +418,19 @@ export default function HomePage() {
             STAGE 3: SHOWROOM TRIỂN LÃM 3 DỰ ÁN TIÊU BIỂU
         ======================================================== */}
         <div
-          className={`absolute bottom-[7%] left-6 sm:left-12 lg:left-16 right-6 sm:right-12 lg:right-16 transition-all duration-700 ${activeSlide === 3 ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-8 pointer-events-none'
+          className={`absolute bottom-[8%] sm:bottom-[7%] left-4 sm:left-12 lg:left-16 right-4 sm:right-12 lg:right-16 transition-all duration-700 ${activeSlide === 3 ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-8 pointer-events-none'
             }`}
         >
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-5">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 sm:gap-5">
             {/* Left Description Card */}
-            <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-5 sm:p-6 max-w-md">
+            <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-4 sm:p-5 lg:p-6 w-full lg:max-w-md">
               {/* Micro-Badge: 03 // SHOWROOM TRIỂN LÃM */}
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-sm text-[11px] font-medium tracking-[0.2em] text-[#FFF6ED]/80 uppercase mb-3 font-body">
+              <div className="inline-flex items-center gap-2 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-sm text-[10px] sm:text-[11px] font-medium tracking-[0.2em] text-[#FFF6ED]/80 uppercase mb-2 sm:mb-3 font-body">
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
                 <span>03. SHOWROOM TRIỂN LÃM</span>
               </div>
 
-              <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-normal tracking-wider text-[#FFF6ED] mb-2">
+              <h2 className="font-heading text-xl sm:text-3xl lg:text-4xl font-normal tracking-wider text-[#FFF6ED] mb-1.5 sm:mb-2">
                 <span className="block bg-clip-text text-transparent bg-gradient-to-b from-[#FFF6ED] via-[#f7eee4] to-[#C8B8A6]">
                   Kiệt Tác Tiêu Biểu
                 </span>
@@ -430,38 +441,43 @@ export default function HomePage() {
               </p>
             </div>
 
-            {/* Right: 3 Tactile Showroom Cards */}
-            <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-3 flex flex-wrap sm:flex-nowrap gap-3 w-full lg:max-w-2xl">
+            {/* Right: 3 Tactile Showroom Cards (3 columns grid on mobile for compact height) */}
+            <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-2 sm:p-3 grid grid-cols-3 gap-2 sm:gap-3 w-full lg:max-w-2xl">
               {PROJECTS_DATA.map((proj, idx) => (
                 <div
                   key={proj.id}
                   onClick={() => setActiveDetailProject(proj)}
-                  className="w-full sm:w-1/3 p-3 rounded-xl border border-white/10 hover:border-[#C88A35]/80 bg-white/5 hover:bg-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.08)] hover:shadow-[0_8px_20px_rgba(200,138,53,0.2)] transition-all cursor-pointer group -translate-y-0 hover:-translate-y-1"
+                  className="p-2 sm:p-3 rounded-xl border border-white/10 hover:border-[#C88A35]/80 bg-white/5 hover:bg-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.08)] hover:shadow-[0_8px_20px_rgba(200,138,53,0.2)] transition-all cursor-pointer group -translate-y-0 hover:-translate-y-1 flex flex-col justify-between"
                 >
-                  <div className="relative w-full h-24 rounded-lg overflow-hidden mb-2 bg-[#12100e]">
-                    <Image
-                      src={proj.image}
-                      alt={proj.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute top-1.5 left-1.5 px-2 py-0.5 rounded-full bg-black/80 backdrop-blur-sm border border-white/10 text-[9px] font-mono text-[#FFF6ED] uppercase">
-                      0{idx + 1}
+                  <div>
+                    <div className="relative w-full h-16 sm:h-24 rounded-lg overflow-hidden mb-1.5 sm:mb-2 bg-[#12100e]">
+                      <Image
+                        src={proj.image}
+                        alt={proj.title}
+                        fill
+                        sizes="(max-width: 640px) 100px, 200px"
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute top-1 left-1 sm:top-1.5 sm:left-1.5 px-1.5 py-0.2 sm:px-2 sm:py-0.5 rounded-full bg-black/80 backdrop-blur-sm border border-white/10 text-[8px] sm:text-[9px] font-mono text-[#FFF6ED] uppercase">
+                        0{idx + 1}
+                      </div>
                     </div>
+
+                    <h3 className="font-heading text-[11px] sm:text-xs font-normal text-white truncate group-hover:text-[#FFF6ED] transition-colors tracking-wide">
+                      {proj.title}
+                    </h3>
                   </div>
 
-                  <h3 className="font-heading text-xs font-normal text-white truncate group-hover:text-[#FFF6ED] transition-colors tracking-wide">
-                    {proj.title}
-                  </h3>
+                  <div>
+                    <div className="flex items-center gap-1 text-[9px] sm:text-[10px] text-neutral-400 mt-1 font-body">
+                      <MapPin className="w-2.5 h-2.5 text-[#C88A35] shrink-0" />
+                      <span className="truncate">{proj.location}</span>
+                    </div>
 
-                  <div className="flex items-center gap-1 text-[10px] text-neutral-400 mt-1 font-body">
-                    <MapPin className="w-2.5 h-2.5 text-[#C88A35] shrink-0" />
-                    <span className="truncate">{proj.location}</span>
-                  </div>
-
-                  <div className="flex items-center gap-1 text-[10px] text-neutral-500 mt-0.5 font-body">
-                    <Maximize2 className="w-2.5 h-2.5 text-neutral-500 shrink-0" />
-                    <span className="truncate">{proj.scale}</span>
+                    <div className="hidden sm:flex items-center gap-1 text-[10px] text-neutral-500 mt-0.5 font-body">
+                      <Maximize2 className="w-2.5 h-2.5 text-neutral-500 shrink-0" />
+                      <span className="truncate">{proj.scale}</span>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -473,47 +489,47 @@ export default function HomePage() {
             STAGE 4: LIÊN HỆ & DỰ TOÁN BÁO GIÁ
         ======================================================== */}
         <div
-          className={`absolute bottom-[11%] left-6 sm:left-12 lg:left-16 transition-all duration-700 pointer-events-auto ${activeSlide === 4 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
+          className={`absolute bottom-[9%] sm:bottom-[11%] left-4 sm:left-12 lg:left-16 right-4 sm:right-auto transition-all duration-700 pointer-events-auto ${activeSlide === 4 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
             }`}
         >
-          <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-6 sm:p-8 max-w-lg">
+          <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-4 sm:p-6 lg:p-8 w-full sm:max-w-lg">
             {/* Micro-Badge: 04 // LIÊN HỆ & DỰ TOÁN */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-sm text-[11px] font-medium tracking-[0.2em] text-[#FFF6ED]/80 uppercase mb-3 font-body">
+            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-sm text-[10px] sm:text-[11px] font-medium tracking-[0.2em] text-[#FFF6ED]/80 uppercase mb-2 sm:mb-3 font-body">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
               <span>04. LIÊN HỆ &amp; DỰ TOÁN</span>
             </div>
 
-            <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-normal tracking-wider text-[#FFF6ED] mb-3">
+            <h2 className="font-heading text-2xl sm:text-4xl lg:text-5xl font-normal tracking-wider text-[#FFF6ED] mb-2 sm:mb-3">
               <span className="block bg-clip-text text-transparent bg-gradient-to-b from-[#FFF6ED] via-[#f7eee4] to-[#C8B8A6]">
                 Khởi Tạo Biểu Tượng
               </span>
             </h2>
 
-            <p className="font-body font-light text-sm text-[#d1d5db] leading-relaxed mb-6">
+            <p className="font-body font-light text-xs sm:text-sm text-[#d1d5db] leading-relaxed mb-4 sm:mb-6">
               Đồng hành cùng chủ đầu tư hiện thực hóa những công trình thế kỷ. Nhận ngay hồ sơ năng lực thi công và bảng dự toán chi tiết từ kỹ sư trưởng Laztar.
             </p>
 
             {/* Tactile Button: Nhận Báo Giá */}
             <button
               onClick={() => setIsContactOpen(true)}
-              className="rounded-full px-6 py-2.5 bg-gradient-to-b from-[#FFF6ED] to-[#E2D5C5] text-black font-semibold shadow-[0_3px_8px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,1)] hover:brightness-105 active:scale-95 transition-all cursor-pointer inline-flex items-center gap-2.5 text-xs uppercase tracking-wider"
+              className="rounded-full px-5 py-2.5 min-h-[44px] bg-gradient-to-b from-[#FFF6ED] to-[#E2D5C5] text-black font-semibold shadow-[0_3px_8px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,1)] hover:brightness-105 active:scale-95 transition-all cursor-pointer inline-flex items-center justify-center gap-2 text-xs uppercase tracking-wider w-full sm:w-auto"
             >
-              <span>Nhận Báo Giá &amp; Bản Vẽ Kỹ Thuật</span>
-              <Send className="w-3.5 h-3.5" />
+              <span>Nhận Báo Giá &amp; Bản Vẽ</span>
+              <Send className="w-3.5 h-3.5 shrink-0" />
             </button>
           </div>
         </div>
 
         {/* FOOTER METRICS & PROGRESS INDICATOR */}
-        <footer className="w-full flex items-center justify-between text-[11px] text-white/50 tracking-wider pointer-events-auto pt-3">
-          <div className="flex items-center gap-4 px-4 py-1.5 rounded-full bg-[#161412]/80 backdrop-blur-xl border border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
-            <span>© 2026 LAZTAR GROUP</span>
+        <footer className="w-full flex items-center justify-between text-[10px] sm:text-[11px] text-white/50 tracking-wider pointer-events-auto pt-2 sm:pt-3">
+          <div className="flex items-center gap-3 sm:gap-4 px-3 sm:px-4 py-1.5 rounded-full bg-[#161412]/80 backdrop-blur-xl border border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
+            <span>© 2026 LAZTAR</span>
             <span className="hidden sm:inline text-white/30">•</span>
-            <span className="hidden sm:inline text-[#FFF6ED]/80">NĂNG LỰC THI CÔNG HẠNG 1 QUỐC GIA</span>
+            <span className="hidden sm:inline text-[#FFF6ED]/80">NĂNG LỰC THI CÔNG HẠNG 1</span>
           </div>
-          <div className="flex items-center gap-3 px-4 py-1.5 rounded-full bg-[#161412]/80 backdrop-blur-xl border border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
+          <div className="flex items-center gap-2.5 sm:gap-3 px-3 sm:px-4 py-1.5 rounded-full bg-[#161412]/80 backdrop-blur-xl border border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
             <span className="text-[#C88A35] font-mono">0{activeSlide}</span>
-            <div className="w-16 h-[2px] bg-white/15 rounded-full relative overflow-hidden">
+            <div className="w-12 sm:w-16 h-[2px] bg-white/15 rounded-full relative overflow-hidden">
               <div
                 className="h-full bg-gradient-to-r from-[#C88A35] to-[#FFF6ED] transition-all duration-300"
                 style={{ width: `${(activeSlide / 4) * 100}%` }}
@@ -634,7 +650,7 @@ export default function HomePage() {
           if (e.target === e.currentTarget) setIsContactOpen(false);
         }}
       >
-        <div className="bg-[#161412]/90 backdrop-blur-2xl border border-white/15 rounded-3xl p-8 sm:p-10 max-w-lg w-[92%] relative shadow-[inset_0_1px_1px_rgba(255,255,255,0.2),0_24px_50px_rgba(0,0,0,0.9)] transition-all">
+        <div className="bg-[#161412]/90 backdrop-blur-2xl border border-white/15 rounded-3xl p-5 sm:p-8 lg:p-10 max-w-lg w-[94%] sm:w-full relative shadow-[inset_0_1px_1px_rgba(255,255,255,0.2),0_24px_50px_rgba(0,0,0,0.9)] transition-all max-h-[90vh] overflow-y-auto">
           <button
             onClick={() => setIsContactOpen(false)}
             className="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/5 border border-white/15 flex items-center justify-center text-white/70 hover:text-white hover:border-[#C88A35] transition-colors cursor-pointer text-lg"

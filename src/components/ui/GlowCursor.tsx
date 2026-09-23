@@ -24,8 +24,14 @@ export default function GlowCursor({
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    // Only run on non-touch devices or when mouse is available
+    // Only run on non-touch desktop devices with fine pointer
     if (typeof window === 'undefined') return;
+    const isTouch =
+      'ontouchstart' in window ||
+      navigator.maxTouchPoints > 0 ||
+      window.matchMedia('(pointer: coarse)').matches ||
+      window.innerWidth < 1024;
+    if (isTouch) return;
 
     const container = containerRef.current;
     if (!container) return;
@@ -280,7 +286,7 @@ export default function GlowCursor({
   return (
     <div
       ref={containerRef}
-      className="pointer-events-none fixed inset-0 z-50 overflow-hidden"
+      className="pointer-events-none fixed inset-0 z-50 overflow-hidden hidden lg:block"
       aria-hidden="true"
     />
   );

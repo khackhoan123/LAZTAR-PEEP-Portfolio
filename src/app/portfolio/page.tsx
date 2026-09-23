@@ -97,7 +97,7 @@ export default function PortfolioPage() {
   };
 
   return (
-    <div id="portfolio-page" className="relative min-h-screen w-full bg-black text-[#FFF6ED] font-sans selection:bg-[#C88A35]/30 selection:text-[#FFF6ED] tabular-nums lining-nums">
+    <div id="portfolio-page" className="relative min-h-screen w-full max-w-full overflow-x-hidden bg-black text-[#FFF6ED] font-sans selection:bg-[#C88A35]/30 selection:text-[#FFF6ED] tabular-nums lining-nums">
       {/* ========================================================
           1. 3D LIQUID BRONZE BACKGROUND & FORGE SPARKS (MODEL DISABLED)
       ======================================================== */}
@@ -122,22 +122,23 @@ export default function PortfolioPage() {
       {/* ========================================================
           NAVBAR WITH SMOOTH ANCHOR MENU & ACTIONS
       ======================================================== */}
-      <header className="fixed top-0 left-0 right-0 z-40 px-4 sm:px-6 py-3.5 backdrop-blur-md bg-black/45 border-b border-white/10 transition-all print:hidden">
-        <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
+      <header className="fixed top-0 left-0 right-0 z-40 px-4 py-3 sm:px-8 backdrop-blur-md bg-black/45 border-b border-white/10 transition-all print:hidden">
+        <div className="max-w-6xl mx-auto flex items-center justify-between gap-3 sm:gap-4">
 
           {/* Left Action: Return to 3D Showroom */}
           <Link
             href="/"
-            className="group flex items-center gap-2.5 text-xs uppercase tracking-[0.2em] text-[#FFF6ED]/90 hover:text-amber-200 transition-colors shrink-0"
+            className="group flex items-center gap-2 sm:gap-2.5 text-xs uppercase tracking-[0.2em] text-[#FFF6ED]/90 hover:text-amber-200 transition-colors shrink-0"
+            title="Về 3D Showroom Laztar"
           >
             <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-amber-500/50 group-hover:scale-105 transition-all">
               <ArrowLeft className="w-4 h-4 text-amber-300 group-hover:-translate-x-0.5 transition-transform" />
             </div>
             <span className="hidden sm:inline font-light tracking-widest font-sans">3D SHOWROOM LAZTAR</span>
-            <span className="sm:hidden font-light tracking-widest font-sans">← SHOWROOM</span>
+            <span className="sm:hidden font-bold text-xs text-amber-300 tracking-wider font-sans">3D</span>
           </Link>
 
-          {/* Center: In-page Anchor Links Menu */}
+          {/* Center: In-page Anchor Links Menu (Hidden on mobile to avoid overflow) */}
           <nav className="hidden md:flex items-center gap-6 px-6 py-2 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.08)]">
             <a
               href="#hero"
@@ -174,7 +175,7 @@ export default function PortfolioPage() {
             <a
               href="/Ta-Khac-Khoan-CV.pdf"
               download="Ta-Khac-Khoan-CV.pdf"
-              className="text-xs font-semibold px-4 py-1.5 rounded-full bg-gradient-to-b from-[#FFF6ED] to-[#E2D5C5] text-black shadow-[0_2px_8px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,1)] hover:brightness-105 active:scale-95 transition-all cursor-pointer inline-flex items-center gap-1.5 font-sans"
+              className="text-xs font-semibold px-3 py-1.5 sm:px-4 sm:py-1.5 rounded-full bg-gradient-to-b from-[#FFF6ED] to-[#E2D5C5] text-black shadow-[0_2px_8px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,1)] hover:brightness-105 active:scale-95 transition-all cursor-pointer inline-flex items-center gap-1.5 font-sans shrink-0 min-h-[36px]"
             >
               <Download className="w-3.5 h-3.5" />
               <span>CV (PDF)</span>
@@ -184,51 +185,52 @@ export default function PortfolioPage() {
       </header>
 
       {/* Main Content Container */}
-      <main className="relative z-10 max-w-6xl mx-auto px-6 pt-28 pb-20 flex flex-col gap-20 print:hidden">
+      <main className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pt-24 sm:pt-28 pb-16 sm:pb-20 flex flex-col gap-14 sm:gap-20 print:hidden w-full overflow-x-hidden">
 
         {/* ========================================================
             SECTION 1: HERO & PROFILE SHOWCASE (#hero)
         ======================================================== */}
-        <section id="hero" className="relative w-full pt-4 pb-2 scroll-mt-28">
-          <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-8 sm:p-12 relative overflow-hidden">
+        <section id="hero" className="relative w-full pt-2 sm:pt-4 pb-2 scroll-mt-24 sm:scroll-mt-28">
+          <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-5 sm:p-8 lg:p-12 relative overflow-hidden">
             {/* Top Amber Ambient Sheen */}
             <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-gradient-to-br from-amber-500/15 to-transparent blur-3xl pointer-events-none" />
             <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-gradient-to-tr from-amber-600/10 to-transparent blur-3xl pointer-events-none" />
 
-            <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-10">
-              <div className="flex-1 space-y-6">
+            {/* Responsive Flex: column-reverse on mobile, row on large screens */}
+            <div className="relative z-10 flex flex-col-reverse lg:flex-row items-center justify-between gap-8 sm:gap-10">
+              <div className="flex-1 space-y-5 sm:space-y-6 w-full text-center lg:text-left">
 
-                {/* Single Refined Status Badge */}
-                <div>
-                  <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] font-medium tracking-wider text-emerald-400 uppercase">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    OPEN TO WORK • FULL-STACK / BRSE (TP.HCM)
+                {/* Single Refined Status Badge (Soft Wrap & Responsive text) */}
+                <div className="flex justify-center lg:justify-start">
+                  <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] sm:text-[11px] font-medium tracking-wider text-emerald-400 uppercase max-w-full leading-snug">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                    <span>OPEN TO WORK • FULL-STACK / BRSE (TP.HCM)</span>
                   </span>
                 </div>
 
                 {/* Primary Title: ONLY TẠ KHẮC KHOAN uses Cormorant Garamond */}
                 <div>
-                  <h1 className="font-heading text-5xl sm:text-6xl lg:text-7xl font-semibold tracking-tight text-[#FFF6ED] leading-none mb-3">
+                  <h1 className="font-heading text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-[#FFF6ED] leading-tight mb-2 sm:mb-3">
                     TẠ KHẮC KHOAN
                   </h1>
-                  <h2 className="text-lg sm:text-xl font-medium font-sans tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-[#FFF6ED] to-amber-400 tabular-nums lining-nums">
+                  <h2 className="text-sm sm:text-lg lg:text-xl font-medium font-sans tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-[#FFF6ED] to-amber-400 tabular-nums lining-nums">
                     Full-Stack Software Engineer &amp; Korean Bridge System Engineer (BrSE)
                   </h2>
                 </div>
 
                 {/* Summary Intro - High Contrast */}
-                <p className="text-neutral-200 text-base sm:text-lg leading-relaxed max-w-2xl font-light font-sans tabular-nums lining-nums">
+                <p className="text-neutral-200 text-xs sm:text-base lg:text-lg leading-relaxed max-w-2xl font-light font-sans tabular-nums lining-nums mx-auto lg:mx-0">
                   Kỹ sư Kỹ thuật phần mềm tốt nghiệp Đại học FPT với kinh nghiệm phát triển các ứng dụng web toàn diện (End-to-End), tích hợp mô hình AI đa phương thức và triển khai hệ thống lên môi trường VPS/Cloud.
                 </p>
 
-                {/* CTA Action Buttons Group */}
-                <div className="pt-2 flex flex-wrap items-center gap-3.5">
+                {/* CTA Action Buttons Group - Mobile 2 cols / Desktop flex with 44px min touch target */}
+                <div className="pt-2 grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2.5 sm:gap-3.5">
                   {/* Primary CTA Button: Download / View CV */}
                   <button
                     onClick={() => setIsCvModalOpen(true)}
-                    className="rounded-full px-6 py-2.5 bg-gradient-to-b from-[#FFF6ED] to-[#E2D5C5] text-black font-semibold shadow-[0_3px_10px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,1)] hover:brightness-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer font-sans"
+                    className="col-span-2 sm:col-auto rounded-full px-5 py-2.5 min-h-[44px] bg-gradient-to-b from-[#FFF6ED] to-[#E2D5C5] text-black font-semibold text-xs sm:text-sm shadow-[0_3px_10px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,1)] hover:brightness-105 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer font-sans"
                   >
-                    <Download className="w-4 h-4 text-black" />
+                    <Download className="w-4 h-4 text-black shrink-0" />
                     <span>Tải CV (Bản tiếng Anh)</span>
                   </button>
 
@@ -237,25 +239,25 @@ export default function PortfolioPage() {
                     href="https://github.com/khackhoan0103"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="rounded-full px-4 py-2.5 bg-white/5 border border-white/10 text-xs sm:text-sm text-neutral-200 hover:text-white hover:bg-white/10 hover:border-amber-400/40 backdrop-blur-sm transition-all flex items-center gap-2 group font-sans"
+                    className="rounded-full px-3.5 py-2.5 min-h-[44px] bg-white/5 border border-white/10 text-xs sm:text-sm text-neutral-200 hover:text-white hover:bg-white/10 hover:border-amber-400/40 backdrop-blur-sm transition-all flex items-center justify-center gap-2 group font-sans"
                   >
-                    <GithubIcon className="w-4 h-4 text-amber-300 group-hover:scale-110 transition-transform" />
+                    <GithubIcon className="w-4 h-4 text-amber-300 group-hover:scale-110 transition-transform shrink-0" />
                     <span>GitHub</span>
                   </a>
 
                   {/* Secondary: Email copy */}
                   <button
                     onClick={handleCopyEmail}
-                    className="rounded-full px-4 py-2.5 bg-white/5 border border-white/10 text-xs sm:text-sm text-neutral-200 hover:text-white hover:bg-white/10 hover:border-amber-400/40 backdrop-blur-sm transition-all flex items-center gap-2 cursor-pointer font-sans"
+                    className="rounded-full px-3.5 py-2.5 min-h-[44px] bg-white/5 border border-white/10 text-xs sm:text-sm text-neutral-200 hover:text-white hover:bg-white/10 hover:border-amber-400/40 backdrop-blur-sm transition-all flex items-center justify-center gap-2 cursor-pointer font-sans"
                   >
                     {copiedEmail ? (
                       <>
-                        <Check className="w-4 h-4 text-emerald-400" />
-                        <span className="text-emerald-300">Đã chép Email!</span>
+                        <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                        <span className="text-emerald-300 text-[11px] sm:text-xs">Đã chép!</span>
                       </>
                     ) : (
                       <>
-                        <Mail className="w-4 h-4 text-amber-300" />
+                        <Mail className="w-4 h-4 text-amber-300 shrink-0" />
                         <span>Email</span>
                       </>
                     )}
@@ -264,36 +266,36 @@ export default function PortfolioPage() {
                   {/* Navigate back to 3D Showroom */}
                   <Link
                     href="/"
-                    className="rounded-full px-4 py-2.5 bg-amber-500/10 border border-amber-500/25 text-xs sm:text-sm text-amber-200 hover:bg-amber-500/20 hover:border-amber-400 transition-all flex items-center gap-2 font-sans"
+                    className="col-span-2 sm:col-auto rounded-full px-4 py-2.5 min-h-[44px] bg-amber-500/10 border border-amber-500/25 text-xs sm:text-sm text-amber-200 hover:bg-amber-500/20 hover:border-amber-400 transition-all flex items-center justify-center gap-2 font-sans"
                   >
-                    <ArrowLeft className="w-4 h-4" />
+                    <ArrowLeft className="w-4 h-4 shrink-0" />
                     <span>3D Showroom</span>
                   </Link>
                 </div>
               </div>
 
-              {/* Profile Card with Real Avatar */}
-              <div className="flex flex-col items-center p-5 rounded-2xl bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/15 shadow-[0_12px_40px_rgba(0,0,0,0.7),inset_0_1px_1px_rgba(255,255,255,0.15)] self-center shrink-0 group">
-                <div className="relative w-48 h-60 sm:w-52 sm:h-64 rounded-2xl overflow-hidden border border-white/15 shadow-[0_8px_30px_rgba(0,0,0,0.6)] group-hover:border-amber-400/50 transition-all duration-500">
+              {/* Profile Card with Real Avatar - Centered & Responsive dimensions */}
+              <div className="flex flex-col items-center p-3.5 sm:p-5 rounded-2xl bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/15 shadow-[0_12px_40px_rgba(0,0,0,0.7),inset_0_1px_1px_rgba(255,255,255,0.15)] mx-auto lg:mx-0 self-center shrink-0 group">
+                <div className="relative w-36 h-44 sm:w-48 sm:h-60 rounded-2xl overflow-hidden border border-white/15 shadow-[0_8px_30px_rgba(0,0,0,0.6)] group-hover:border-amber-400/50 transition-all duration-500">
                   <Image
                     src="/images/avatar.jpg"
                     alt="Tạ Khắc Khoan - Software Engineer & Korean BrSE"
                     fill
                     priority
-                    sizes="(max-width: 640px) 192px, 208px"
+                    sizes="(max-width: 640px) 144px, 192px"
                     className="object-cover group-hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity" />
                 </div>
 
-                <div className="text-center mt-4 space-y-1 w-full">
-                  <h3 className="font-sans text-xl font-bold text-[#FFF6ED] tracking-wide tabular-nums lining-nums">
+                <div className="text-center mt-3 sm:mt-4 space-y-1 w-full">
+                  <h3 className="font-sans text-lg sm:text-xl font-bold text-[#FFF6ED] tracking-wide tabular-nums lining-nums">
                     Tạ Khắc Khoan
                   </h3>
-                  <p className="text-xs font-mono text-amber-300 tracking-wider font-medium">
+                  <p className="text-[11px] sm:text-xs font-mono text-amber-300 tracking-wider font-medium">
                     Software Engineer / BrSE
                   </p>
-                  <div className="flex items-center justify-center gap-1.5 text-[11px] text-neutral-300 pt-1 font-sans">
+                  <div className="flex items-center justify-center gap-1.5 text-[10px] sm:text-[11px] text-neutral-300 pt-0.5 sm:pt-1 font-sans">
                     <MapPin className="w-3 h-3 text-amber-400/80" />
                     <span>TP. Thủ Đức, TP.HCM</span>
                   </div>
@@ -322,35 +324,37 @@ export default function PortfolioPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
             {/* 1. Backend & Architecture */}
-            <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-6 sm:p-8 hover:border-amber-400/40 transition-all duration-300 group">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 group-hover:scale-105 transition-transform">
-                  <Server className="w-5 h-5" />
+            <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-5 sm:p-6 hover:border-amber-400/40 transition-all duration-300 group flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-3 mb-3.5">
+                  <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 group-hover:scale-105 transition-transform shrink-0">
+                    <Server className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 className="font-sans text-lg font-bold text-[#FFF6ED] tabular-nums lining-nums">Backend &amp; Arch</h3>
+                    <span className="text-[10px] text-amber-400/80 uppercase tracking-widest font-mono">Enterprise Core</span>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-sans text-xl font-bold text-[#FFF6ED] tabular-nums lining-nums">Backend &amp; Architecture</h3>
-                  <span className="text-[11px] text-amber-400/80 uppercase tracking-widest font-mono">Robust Enterprise Core</span>
-                </div>
+                <p className="text-xs text-neutral-200 leading-relaxed mb-4 font-light font-sans tabular-nums lining-nums">
+                  Thiết kế kiến trúc dịch vụ chuẩn MVC/Clean Architecture, xử lý bất đồng bộ đa luồng (Async), phân quyền bảo mật chuyên sâu và quản trị Transaction tin cậy.
+                </p>
               </div>
-              <p className="text-xs sm:text-sm text-neutral-200 leading-relaxed mb-5 font-light font-sans tabular-nums lining-nums">
-                Thiết kế kiến trúc dịch vụ chuẩn MVC/Clean Architecture, xử lý bất đồng bộ đa luồng (Async/Thread Pool), phân quyền bảo mật chuyên sâu và quản trị Transaction tin cậy.
-              </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5 pt-1">
                 {[
                   'Java',
                   'Spring Boot',
                   'Spring Security',
                   'Spring Data JPA',
                   'Hibernate',
-                  'ASP.NET Core Web API',
+                  'ASP.NET Core',
                   'RESTful APIs',
                 ].map((skill) => (
                   <span
                     key={skill}
-                    className="rounded-full px-3 py-1 bg-white/[0.07] border border-white/15 text-[11px] text-[#FFF6ED] font-medium backdrop-blur-sm group-hover:border-amber-400/40 transition-colors font-sans tabular-nums lining-nums"
+                    className="rounded-full px-2.5 py-0.5 bg-white/[0.07] border border-white/15 text-[10px] sm:text-[11px] text-[#FFF6ED] font-medium backdrop-blur-sm group-hover:border-amber-400/40 transition-colors font-sans tabular-nums lining-nums"
                   >
                     {skill}
                   </span>
@@ -359,20 +363,22 @@ export default function PortfolioPage() {
             </div>
 
             {/* 2. Modern Frontend */}
-            <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-6 sm:p-8 hover:border-amber-400/40 transition-all duration-300 group">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 group-hover:scale-105 transition-transform">
-                  <Layout className="w-5 h-5" />
+            <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-5 sm:p-6 hover:border-amber-400/40 transition-all duration-300 group flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-3 mb-3.5">
+                  <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 group-hover:scale-105 transition-transform shrink-0">
+                    <Layout className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 className="font-sans text-lg font-bold text-[#FFF6ED] tabular-nums lining-nums">Modern Frontend</h3>
+                    <span className="text-[10px] text-amber-400/80 uppercase tracking-widest font-mono">Tactile &amp; 3D</span>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-sans text-xl font-bold text-[#FFF6ED] tabular-nums lining-nums">Modern Frontend</h3>
-                  <span className="text-[11px] text-amber-400/80 uppercase tracking-widest font-mono">Tactile &amp; 3D Graphics</span>
-                </div>
+                <p className="text-xs text-neutral-200 leading-relaxed mb-4 font-light font-sans tabular-nums lining-nums">
+                  Xây dựng giao diện Dark Skeuomorphism xúc giác cao cấp, tối ưu hóa tái kết xuất, lập trình Shader 3D (Three.js/OGL) và tương thích hoàn toàn thiết bị.
+                </p>
               </div>
-              <p className="text-xs sm:text-sm text-neutral-200 leading-relaxed mb-5 font-light font-sans tabular-nums lining-nums">
-                Xây dựng giao diện Dark Skeuomorphism xúc giác cao cấp, tối ưu hóa tái kết xuất (React Rendering Performance), lập trình Shader 3D (Three.js/OGL) và tương thích hoàn toàn thiết bị.
-              </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5 pt-1">
                 {[
                   'React',
                   'TypeScript',
@@ -384,7 +390,7 @@ export default function PortfolioPage() {
                 ].map((skill) => (
                   <span
                     key={skill}
-                    className="rounded-full px-3 py-1 bg-white/[0.07] border border-white/15 text-[11px] text-[#FFF6ED] font-medium backdrop-blur-sm group-hover:border-amber-400/40 transition-colors font-sans tabular-nums lining-nums"
+                    className="rounded-full px-2.5 py-0.5 bg-white/[0.07] border border-white/15 text-[10px] sm:text-[11px] text-[#FFF6ED] font-medium backdrop-blur-sm group-hover:border-amber-400/40 transition-colors font-sans tabular-nums lining-nums"
                   >
                     {skill}
                   </span>
@@ -393,29 +399,31 @@ export default function PortfolioPage() {
             </div>
 
             {/* 3. AI & Integrations */}
-            <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-6 sm:p-8 hover:border-amber-400/40 transition-all duration-300 group">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 group-hover:scale-105 transition-transform">
-                  <Sparkles className="w-5 h-5" />
+            <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-5 sm:p-6 hover:border-amber-400/40 transition-all duration-300 group flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-3 mb-3.5">
+                  <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 group-hover:scale-105 transition-transform shrink-0">
+                    <Sparkles className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 className="font-sans text-lg font-bold text-[#FFF6ED] tabular-nums lining-nums">AI &amp; Integrations</h3>
+                    <span className="text-[10px] text-amber-400/80 uppercase tracking-widest font-mono">Multimodal &amp; Vectors</span>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-sans text-xl font-bold text-[#FFF6ED] tabular-nums lining-nums">AI &amp; Integrations</h3>
-                  <span className="text-[11px] text-amber-400/80 uppercase tracking-widest font-mono">Multimodal &amp; Vectors</span>
-                </div>
+                <p className="text-xs text-neutral-200 leading-relaxed mb-4 font-light font-sans tabular-nums lining-nums">
+                  Tích hợp mô hình AI đa phương thức giải quyết bài toán thị giác máy tính và gợi ý thông minh, trích xuất đặc trưng Vector Embeddings và thuật toán Cosine Similarity.
+                </p>
               </div>
-              <p className="text-xs sm:text-sm text-neutral-200 leading-relaxed mb-5 font-light font-sans tabular-nums lining-nums">
-                Tích hợp mô hình AI đa phương thức giải quyết bài toán thị giác máy tính và gợi ý thông minh, trích xuất đặc trưng Vector Embeddings và thuật toán tính độ tương đồng Cosine Similarity.
-              </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5 pt-1">
                 {[
-                  'Google Gemini Multimodal APIs',
+                  'Gemini APIs',
                   'Vector Embeddings',
                   'Semantic Search',
                   'Cosine Similarity',
                 ].map((skill) => (
                   <span
                     key={skill}
-                    className="rounded-full px-3 py-1 bg-white/[0.07] border border-white/15 text-[11px] text-[#FFF6ED] font-medium backdrop-blur-sm group-hover:border-amber-400/40 transition-colors font-sans tabular-nums lining-nums"
+                    className="rounded-full px-2.5 py-0.5 bg-white/[0.07] border border-white/15 text-[10px] sm:text-[11px] text-[#FFF6ED] font-medium backdrop-blur-sm group-hover:border-amber-400/40 transition-colors font-sans tabular-nums lining-nums"
                   >
                     {skill}
                   </span>
@@ -424,31 +432,33 @@ export default function PortfolioPage() {
             </div>
 
             {/* 4. DevOps, Database & Systems */}
-            <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-6 sm:p-8 hover:border-amber-400/40 transition-all duration-300 group">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 group-hover:scale-105 transition-transform">
-                  <Cloud className="w-5 h-5" />
+            <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-5 sm:p-6 hover:border-amber-400/40 transition-all duration-300 group flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-3 mb-3.5">
+                  <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 group-hover:scale-105 transition-transform shrink-0">
+                    <Cloud className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 className="font-sans text-lg font-bold text-[#FFF6ED] tabular-nums lining-nums">DevOps &amp; Database</h3>
+                    <span className="text-[10px] text-amber-400/80 uppercase tracking-widest font-mono">Deploy &amp; Stability</span>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-sans text-xl font-bold text-[#FFF6ED] tabular-nums lining-nums">DevOps, Database &amp; Systems</h3>
-                  <span className="text-[11px] text-amber-400/80 uppercase tracking-widest font-mono">Deployment &amp; Stability</span>
-                </div>
+                <p className="text-xs text-neutral-200 leading-relaxed mb-4 font-light font-sans tabular-nums lining-nums">
+                  Thiết kế lược đồ cơ sở dữ liệu quan hệ, tối ưu truy vấn Indexing, đóng gói Docker container hóa đa dịch vụ và triển khai thực tế trên môi trường máy chủ Linux VPS.
+                </p>
               </div>
-              <p className="text-xs sm:text-sm text-neutral-200 leading-relaxed mb-5 font-light font-sans tabular-nums lining-nums">
-                Thiết kế lược đồ cơ sở dữ liệu quan hệ, tối ưu truy vấn Indexing, đóng gói Docker container hóa đa dịch vụ và triển khai thực tế trên môi trường máy chủ Linux VPS bảo mật.
-              </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5 pt-1">
                 {[
                   'SQL Server',
                   'MySQL',
                   'Docker',
-                  'VPS Deployment',
+                  'VPS Deploy',
                   'Linux',
                   'Firebase',
                 ].map((skill) => (
                   <span
                     key={skill}
-                    className="rounded-full px-3 py-1 bg-white/[0.07] border border-white/15 text-[11px] text-[#FFF6ED] font-medium backdrop-blur-sm group-hover:border-amber-400/40 transition-colors font-sans tabular-nums lining-nums"
+                    className="rounded-full px-2.5 py-0.5 bg-white/[0.07] border border-white/15 text-[10px] sm:text-[11px] text-[#FFF6ED] font-medium backdrop-blur-sm group-hover:border-amber-400/40 transition-colors font-sans tabular-nums lining-nums"
                   >
                     {skill}
                   </span>
@@ -478,46 +488,46 @@ export default function PortfolioPage() {
             </p>
           </div>
 
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-6 sm:gap-8">
 
             {/* PROJECT 01: CosMate */}
-            <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-8 sm:p-10 hover:border-amber-400/40 hover:shadow-[0_0_35px_rgba(200,138,53,0.15)] transition-all duration-300 relative overflow-hidden group">
-              <div className="flex flex-col lg:flex-row items-start justify-between gap-6 pb-6 border-b border-white/10">
+            <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-5 sm:p-8 lg:p-10 hover:border-amber-400/40 hover:shadow-[0_0_35px_rgba(200,138,53,0.15)] transition-all duration-300 relative overflow-hidden group">
+              <div className="flex flex-col lg:flex-row items-start justify-between gap-4 sm:gap-6 pb-5 sm:pb-6 border-b border-white/10">
                 <div className="space-y-2">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="text-xs font-mono font-bold text-amber-400 tracking-wider">PROJECT 01</span>
                     <span className="text-white/30">•</span>
-                    <span className="rounded-full px-3 py-0.5 bg-amber-500/10 border border-amber-500/30 text-[11px] text-amber-300 font-medium font-sans">
+                    <span className="rounded-full px-2.5 py-0.5 bg-amber-500/10 border border-amber-500/30 text-[10px] sm:text-[11px] text-amber-300 font-medium font-sans">
                       Full-stack &amp; AI Integration
                     </span>
-                    <span className="rounded-full px-3 py-0.5 bg-white/5 border border-white/10 text-[11px] text-neutral-300 font-sans">
+                    <span className="rounded-full px-2.5 py-0.5 bg-white/5 border border-white/10 text-[10px] sm:text-[11px] text-neutral-300 font-sans">
                       Capstone Project &amp; FPT Software Academy
                     </span>
                   </div>
-                  <h3 className="font-sans text-2xl sm:text-3xl font-bold text-[#FFF6ED] group-hover:text-amber-200 transition-colors tabular-nums lining-nums">
+                  <h3 className="font-sans text-xl sm:text-2xl lg:text-3xl font-bold text-[#FFF6ED] group-hover:text-amber-200 transition-colors tabular-nums lining-nums">
                     CosMate — Nền Tảng Thuê Trang Phục Cosplay Tích Hợp AI
                   </h3>
                 </div>
 
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5 pt-1 lg:pt-0">
                   {['Spring Boot', 'React', 'Gemini APIs', 'Docker', 'VPS'].map((tag) => (
-                    <span key={tag} className="rounded-full px-3 py-1 bg-white/[0.07] border border-white/15 text-[11px] text-[#FFF6ED] backdrop-blur-sm font-sans tabular-nums lining-nums">
+                    <span key={tag} className="rounded-full px-2.5 py-0.5 sm:px-3 sm:py-1 bg-white/[0.07] border border-white/15 text-[10px] sm:text-[11px] text-[#FFF6ED] backdrop-blur-sm font-sans tabular-nums lining-nums">
                       {tag}
                     </span>
                   ))}
                 </div>
               </div>
 
-              {/* Project Body */}
-              <div className="pt-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 space-y-4">
+              {/* Project Body: Stacks description on top and metrics below on mobile */}
+              <div className="pt-5 sm:pt-6 flex flex-col lg:flex-row items-stretch gap-6 lg:gap-8">
+                <div className="flex-1 space-y-4">
                   <h4 className="text-xs uppercase font-mono tracking-widest text-amber-300">Mô Tả &amp; Kiến Trúc Giải Pháp:</h4>
-                  <p className="text-sm text-neutral-200 leading-relaxed font-light font-sans tabular-nums lining-nums">
+                  <p className="text-xs sm:text-sm text-neutral-200 leading-relaxed font-light font-sans tabular-nums lining-nums">
                     Nền tảng thuê trang phục cosplay đa người dùng hỗ trợ 3 phân quyền và hơn 80 RESTful APIs. Tích hợp AI chấm điểm dáng và đề xuất thông minh qua Gemini Multimodal, Vector Embeddings và Cosine Similarity. Tối ưu độ tin cậy của tiến trình AI dài bằng Spring Async và Transaction Template; đóng gói Docker và triển khai thực tế trên VPS.
                   </p>
 
                   {/* Highlights Bullet List */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 pt-2">
                     <div className="flex items-start gap-2.5 text-xs text-neutral-100 font-sans tabular-nums lining-nums">
                       <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                       <span><strong>80+ RESTful APIs:</strong> Bảo mật RBAC đa cấp độ với Spring Security &amp; JWT Token.</span>
@@ -538,21 +548,21 @@ export default function PortfolioPage() {
                 </div>
 
                 {/* Key Metrics Box (Lining-nums & Tabular-nums) */}
-                <div className="rounded-xl bg-black/50 border border-white/10 p-5 flex flex-col justify-between space-y-4">
+                <div className="w-full lg:w-72 shrink-0 rounded-xl bg-black/50 border border-white/10 p-4 sm:p-5 flex flex-col justify-between space-y-4">
                   <div>
                     <span className="text-[11px] font-mono uppercase tracking-wider text-amber-400/80">Chỉ số nổi bật</span>
-                    <div className="mt-3 space-y-3">
+                    <div className="mt-3 grid grid-cols-3 lg:grid-cols-1 gap-3">
                       <div>
-                        <div className="font-sans font-bold text-2xl text-amber-300 tracking-tight lining-nums tabular-nums">80+ APIs</div>
-                        <div className="text-xs text-neutral-400 font-sans">Endpoints RESTful bảo mật tối đa</div>
+                        <div className="font-sans font-bold text-xl sm:text-2xl text-amber-300 tracking-tight lining-nums tabular-nums">80+ APIs</div>
+                        <div className="text-[11px] sm:text-xs text-neutral-400 font-sans">Endpoints RESTful</div>
                       </div>
                       <div>
-                        <div className="font-sans font-bold text-2xl text-[#FFF6ED] tracking-tight lining-nums tabular-nums">3 Roles</div>
-                        <div className="text-xs text-neutral-400 font-sans">Customer, Cosplayer Shop, System Admin</div>
+                        <div className="font-sans font-bold text-xl sm:text-2xl text-[#FFF6ED] tracking-tight lining-nums tabular-nums">3 Roles</div>
+                        <div className="text-[11px] sm:text-xs text-neutral-400 font-sans">RBAC Permissions</div>
                       </div>
                       <div>
-                        <div className="font-sans font-bold text-2xl text-emerald-400 tracking-tight lining-nums tabular-nums">100% Dockerized</div>
-                        <div className="text-xs text-neutral-400 font-sans">Môi trường sản xuất trên Linux VPS</div>
+                        <div className="font-sans font-bold text-xl sm:text-2xl text-emerald-400 tracking-tight lining-nums tabular-nums">Docker</div>
+                        <div className="text-[11px] sm:text-xs text-neutral-400 font-sans">Linux VPS Prod</div>
                       </div>
                     </div>
                   </div>
@@ -561,27 +571,27 @@ export default function PortfolioPage() {
             </div>
 
             {/* PROJECT 02: CineManage System */}
-            <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-8 sm:p-10 hover:border-amber-400/40 hover:shadow-[0_0_35px_rgba(200,138,53,0.15)] transition-all duration-300 relative overflow-hidden group">
-              <div className="flex flex-col lg:flex-row items-start justify-between gap-6 pb-6 border-b border-white/10">
+            <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-5 sm:p-8 lg:p-10 hover:border-amber-400/40 hover:shadow-[0_0_35px_rgba(200,138,53,0.15)] transition-all duration-300 relative overflow-hidden group">
+              <div className="flex flex-col lg:flex-row items-start justify-between gap-4 sm:gap-6 pb-5 sm:pb-6 border-b border-white/10">
                 <div className="space-y-2">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="text-xs font-mono font-bold text-amber-400 tracking-wider">PROJECT 02</span>
                     <span className="text-white/30">•</span>
-                    <span className="rounded-full px-3 py-0.5 bg-amber-500/10 border border-amber-500/30 text-[11px] text-amber-300 font-medium font-sans">
+                    <span className="rounded-full px-2.5 py-0.5 bg-amber-500/10 border border-amber-500/30 text-[10px] sm:text-[11px] text-amber-300 font-medium font-sans">
                       Real-time &amp; Payment Gateway
                     </span>
-                    <span className="rounded-full px-3 py-0.5 bg-white/5 border border-white/10 text-[11px] text-neutral-300 font-sans">
+                    <span className="rounded-full px-2.5 py-0.5 bg-white/5 border border-white/10 text-[10px] sm:text-[11px] text-neutral-300 font-sans">
                       FPT Software Academy
                     </span>
                   </div>
-                  <h3 className="font-sans text-2xl sm:text-3xl font-bold text-[#FFF6ED] group-hover:text-amber-200 transition-colors tabular-nums lining-nums">
+                  <h3 className="font-sans text-xl sm:text-2xl lg:text-3xl font-bold text-[#FFF6ED] group-hover:text-amber-200 transition-colors tabular-nums lining-nums">
                     CineManage System — Hệ Sinh Thái Đặt Vé Xem Phim Thời Gian Thực
                   </h3>
                 </div>
 
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5 pt-1 lg:pt-0">
                   {['ASP.NET Core', 'React', 'TypeScript', 'SignalR', 'VNPay', 'JWT'].map((tag) => (
-                    <span key={tag} className="rounded-full px-3 py-1 bg-white/[0.07] border border-white/15 text-[11px] text-[#FFF6ED] backdrop-blur-sm font-sans tabular-nums lining-nums">
+                    <span key={tag} className="rounded-full px-2.5 py-0.5 sm:px-3 sm:py-1 bg-white/[0.07] border border-white/15 text-[10px] sm:text-[11px] text-[#FFF6ED] backdrop-blur-sm font-sans tabular-nums lining-nums">
                       {tag}
                     </span>
                   ))}
@@ -589,15 +599,15 @@ export default function PortfolioPage() {
               </div>
 
               {/* Project Body */}
-              <div className="pt-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 space-y-4">
+              <div className="pt-5 sm:pt-6 flex flex-col lg:flex-row items-stretch gap-6 lg:gap-8">
+                <div className="flex-1 space-y-4">
                   <h4 className="text-xs uppercase font-mono tracking-widest text-amber-300">Mô Tả &amp; Kiến Trúc Giải Pháp:</h4>
-                  <p className="text-sm text-neutral-200 leading-relaxed font-light font-sans tabular-nums lining-nums">
+                  <p className="text-xs sm:text-sm text-neutral-200 leading-relaxed font-light font-sans tabular-nums lining-nums">
                     Hệ sinh thái đặt vé xem phim với 50+ RESTful APIs. Khóa ghế theo thời gian thực (Real-time seat locking) bằng SignalR, bảo mật JWT và tích hợp cổng thanh toán VNPay.
                   </p>
 
                   {/* Highlights Bullet List */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 pt-2">
                     <div className="flex items-start gap-2.5 text-xs text-neutral-100 font-sans tabular-nums lining-nums">
                       <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                       <span><strong>Real-time Seat Locking:</strong> Sử dụng SignalR Hubs ngăn chặn tuyệt đối tình trạng đặt trùng ghế (race condition).</span>
@@ -618,21 +628,21 @@ export default function PortfolioPage() {
                 </div>
 
                 {/* Key Metrics Box */}
-                <div className="rounded-xl bg-black/50 border border-white/10 p-5 flex flex-col justify-between space-y-4">
+                <div className="w-full lg:w-72 shrink-0 rounded-xl bg-black/50 border border-white/10 p-4 sm:p-5 flex flex-col justify-between space-y-4">
                   <div>
                     <span className="text-[11px] font-mono uppercase tracking-wider text-amber-400/80">Chỉ số nổi bật</span>
-                    <div className="mt-3 space-y-3">
+                    <div className="mt-3 grid grid-cols-3 lg:grid-cols-1 gap-3">
                       <div>
-                        <div className="font-sans font-bold text-2xl text-amber-300 tracking-tight lining-nums tabular-nums">50+ APIs</div>
-                        <div className="text-xs text-neutral-400 font-sans">ASP.NET Core C# Backend tối ưu</div>
+                        <div className="font-sans font-bold text-xl sm:text-2xl text-amber-300 tracking-tight lining-nums tabular-nums">50+ APIs</div>
+                        <div className="text-[11px] sm:text-xs text-neutral-400 font-sans">ASP.NET Core C#</div>
                       </div>
                       <div>
-                        <div className="font-sans font-bold text-2xl text-[#FFF6ED] tracking-tight lining-nums tabular-nums">&lt; 100ms</div>
-                        <div className="text-xs text-neutral-400 font-sans">Độ trễ đồng bộ ghế qua SignalR</div>
+                        <div className="font-sans font-bold text-xl sm:text-2xl text-[#FFF6ED] tracking-tight lining-nums tabular-nums">&lt; 100ms</div>
+                        <div className="text-[11px] sm:text-xs text-neutral-400 font-sans">Độ trễ SignalR</div>
                       </div>
                       <div>
-                        <div className="font-sans font-bold text-2xl text-emerald-400 tracking-tight lining-nums tabular-nums">VNPay Gateway</div>
-                        <div className="text-xs text-neutral-400 font-sans">Thanh toán bảo mật chuẩn ngân hàng</div>
+                        <div className="font-sans font-bold text-xl sm:text-2xl text-emerald-400 tracking-tight lining-nums tabular-nums">VNPay</div>
+                        <div className="text-[11px] sm:text-xs text-neutral-400 font-sans">Cổng thanh toán</div>
                       </div>
                     </div>
                   </div>
@@ -641,24 +651,24 @@ export default function PortfolioPage() {
             </div>
 
             {/* PROJECT 03: KoiCareHome */}
-            <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-8 sm:p-10 hover:border-amber-400/40 hover:shadow-[0_0_35px_rgba(200,138,53,0.15)] transition-all duration-300 relative overflow-hidden group">
-              <div className="flex flex-col lg:flex-row items-start justify-between gap-6 pb-6 border-b border-white/10">
+            <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-5 sm:p-8 lg:p-10 hover:border-amber-400/40 hover:shadow-[0_0_35px_rgba(200,138,53,0.15)] transition-all duration-300 relative overflow-hidden group">
+              <div className="flex flex-col lg:flex-row items-start justify-between gap-4 sm:gap-6 pb-5 sm:pb-6 border-b border-white/10">
                 <div className="space-y-2">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="text-xs font-mono font-bold text-amber-400 tracking-wider">PROJECT 03</span>
                     <span className="text-white/30">•</span>
-                    <span className="rounded-full px-3 py-0.5 bg-amber-500/10 border border-amber-500/30 text-[11px] text-amber-300 font-medium font-sans">
+                    <span className="rounded-full px-2.5 py-0.5 bg-amber-500/10 border border-amber-500/30 text-[10px] sm:text-[11px] text-amber-300 font-medium font-sans">
                       Enterprise Java &amp; Data Management
                     </span>
                   </div>
-                  <h3 className="font-sans text-2xl sm:text-3xl font-bold text-[#FFF6ED] group-hover:text-amber-200 transition-colors tabular-nums lining-nums">
+                  <h3 className="font-sans text-xl sm:text-2xl lg:text-3xl font-bold text-[#FFF6ED] group-hover:text-amber-200 transition-colors tabular-nums lining-nums">
                     KoiCareHome — Nền Tảng Quản Lý Hồ Nuôi &amp; Sức Khỏe Cá Koi
                   </h3>
                 </div>
 
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5 pt-1 lg:pt-0">
                   {['Java', 'Spring Boot', 'React', 'SQL Server', 'Spring Security'].map((tag) => (
-                    <span key={tag} className="rounded-full px-3 py-1 bg-white/[0.07] border border-white/15 text-[11px] text-[#FFF6ED] backdrop-blur-sm font-sans tabular-nums lining-nums">
+                    <span key={tag} className="rounded-full px-2.5 py-0.5 sm:px-3 sm:py-1 bg-white/[0.07] border border-white/15 text-[10px] sm:text-[11px] text-[#FFF6ED] backdrop-blur-sm font-sans tabular-nums lining-nums">
                       {tag}
                     </span>
                   ))}
@@ -666,15 +676,15 @@ export default function PortfolioPage() {
               </div>
 
               {/* Project Body */}
-              <div className="pt-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 space-y-4">
+              <div className="pt-5 sm:pt-6 flex flex-col lg:flex-row items-stretch gap-6 lg:gap-8">
+                <div className="flex-1 space-y-4">
                   <h4 className="text-xs uppercase font-mono tracking-widest text-amber-300">Mô Tả &amp; Kiến Trúc Giải Pháp:</h4>
-                  <p className="text-sm text-neutral-200 leading-relaxed font-light font-sans tabular-nums lining-nums">
+                  <p className="text-xs sm:text-sm text-neutral-200 leading-relaxed font-light font-sans tabular-nums lining-nums">
                     Ứng dụng quản lý hồ và cá Koi thông qua 50+ APIs, cấu hình phân quyền bảo mật với Spring Security và quản trị dữ liệu qua Spring Data JPA.
                   </p>
 
                   {/* Highlights Bullet List */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 pt-2">
                     <div className="flex items-start gap-2.5 text-xs text-neutral-100 font-sans tabular-nums lining-nums">
                       <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                       <span><strong>50+ APIs chuyên biệt:</strong> Theo dõi chất lượng nước (nồng độ pH, Oxy, nhiệt độ, NO2) và hồ sơ từng cá thể cá Koi.</span>
@@ -695,21 +705,21 @@ export default function PortfolioPage() {
                 </div>
 
                 {/* Key Metrics Box */}
-                <div className="rounded-xl bg-black/50 border border-white/10 p-5 flex flex-col justify-between space-y-4">
+                <div className="w-full lg:w-72 shrink-0 rounded-xl bg-black/50 border border-white/10 p-4 sm:p-5 flex flex-col justify-between space-y-4">
                   <div>
                     <span className="text-[11px] font-mono uppercase tracking-wider text-amber-400/80">Chỉ số nổi bật</span>
-                    <div className="mt-3 space-y-3">
+                    <div className="mt-3 grid grid-cols-3 lg:grid-cols-1 gap-3">
                       <div>
-                        <div className="font-sans font-bold text-2xl text-amber-300 tracking-tight lining-nums tabular-nums">50+ APIs</div>
-                        <div className="text-xs text-neutral-400 font-sans">Dịch vụ quản lý nước &amp; cá Koi</div>
+                        <div className="font-sans font-bold text-xl sm:text-2xl text-amber-300 tracking-tight lining-nums tabular-nums">50+ APIs</div>
+                        <div className="text-[11px] sm:text-xs text-neutral-400 font-sans">Dịch vụ quản lý nước</div>
                       </div>
                       <div>
-                        <div className="font-sans font-bold text-2xl text-[#FFF6ED] tracking-tight lining-nums tabular-nums">Automated</div>
-                        <div className="text-xs text-neutral-400 font-sans">Tính toán dinh dưỡng &amp; cảnh báo chỉ số nước</div>
+                        <div className="font-sans font-bold text-xl sm:text-2xl text-[#FFF6ED] tracking-tight lining-nums tabular-nums">Automated</div>
+                        <div className="text-[11px] sm:text-xs text-neutral-400 font-sans">Dinh dưỡng &amp; cảnh báo</div>
                       </div>
                       <div>
-                        <div className="font-sans font-bold text-2xl text-emerald-400 tracking-tight lining-nums tabular-nums">JPA &amp; SQL Server</div>
-                        <div className="text-xs text-neutral-400 font-sans">Toàn vẹn dữ liệu chuỗi lịch sử chăm sóc</div>
+                        <div className="font-sans font-bold text-xl sm:text-2xl text-emerald-400 tracking-tight lining-nums tabular-nums">JPA / SQL</div>
+                        <div className="text-[11px] sm:text-xs text-neutral-400 font-sans">Toàn vẹn dữ liệu</div>
                       </div>
                     </div>
                   </div>
@@ -739,17 +749,17 @@ export default function PortfolioPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
 
             {/* Timeline: Experience & Education (2 Columns) */}
-            <div className="lg:col-span-2 bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-8">
-              <div className="relative border-l border-amber-500/30 pl-6 ml-3 space-y-8">
+            <div className="lg:col-span-2 bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-5 sm:p-8">
+              <div className="relative border-l border-amber-500/30 pl-4 sm:pl-6 ml-2 sm:ml-3 space-y-6 sm:space-y-8">
 
                 {/* Milestone 1 */}
                 <div className="relative group">
-                  <div className="absolute -left-[31px] top-1.5 w-3 h-3 rounded-full bg-amber-400 ring-4 ring-[#161412] shadow-[0_0_10px_rgba(200,138,53,0.8)] group-hover:scale-125 transition-transform" />
+                  <div className="absolute -left-[23px] sm:-left-[31px] top-1.5 w-3 h-3 rounded-full bg-amber-400 ring-4 ring-[#161412] shadow-[0_0_10px_rgba(200,138,53,0.8)] group-hover:scale-125 transition-transform" />
                   <span className="text-xs font-mono font-bold text-amber-300 tracking-wider lining-nums tabular-nums">01/2026 – 07/2026</span>
-                  <h3 className="font-sans text-xl sm:text-2xl font-bold text-[#FFF6ED] mt-1 tabular-nums lining-nums">
+                  <h3 className="font-sans text-lg sm:text-xl lg:text-2xl font-bold text-[#FFF6ED] mt-1 tabular-nums lining-nums">
                     Java Full-stack Fresher Training
                   </h3>
                   <div className="text-xs text-neutral-400 mb-2 font-sans">FPT Software Academy</div>
@@ -760,9 +770,9 @@ export default function PortfolioPage() {
 
                 {/* Milestone 2 */}
                 <div className="relative group">
-                  <div className="absolute -left-[31px] top-1.5 w-3 h-3 rounded-full bg-amber-300 ring-4 ring-[#161412] shadow-[0_0_10px_rgba(200,138,53,0.6)] group-hover:scale-125 transition-transform" />
+                  <div className="absolute -left-[23px] sm:-left-[31px] top-1.5 w-3 h-3 rounded-full bg-amber-300 ring-4 ring-[#161412] shadow-[0_0_10px_rgba(200,138,53,0.6)] group-hover:scale-125 transition-transform" />
                   <span className="text-xs font-mono font-bold text-amber-300 tracking-wider lining-nums tabular-nums">12/2024 – 04/2025</span>
-                  <h3 className="font-sans text-xl sm:text-2xl font-bold text-[#FFF6ED] mt-1 tabular-nums lining-nums">
+                  <h3 className="font-sans text-lg sm:text-xl lg:text-2xl font-bold text-[#FFF6ED] mt-1 tabular-nums lining-nums">
                     .NET &amp; React Internship
                   </h3>
                   <div className="text-xs text-neutral-400 mb-2 font-sans">FPT Software Academy</div>
@@ -773,9 +783,9 @@ export default function PortfolioPage() {
 
                 {/* Milestone 3 */}
                 <div className="relative group">
-                  <div className="absolute -left-[31px] top-1.5 w-3 h-3 rounded-full bg-[#FFF6ED] ring-4 ring-[#161412] shadow-[0_0_10px_rgba(255,246,237,0.5)] group-hover:scale-125 transition-transform" />
+                  <div className="absolute -left-[23px] sm:-left-[31px] top-1.5 w-3 h-3 rounded-full bg-[#FFF6ED] ring-4 ring-[#161412] shadow-[0_0_10px_rgba(255,246,237,0.5)] group-hover:scale-125 transition-transform" />
                   <span className="text-xs font-mono font-bold text-neutral-400 tracking-wider lining-nums tabular-nums">2022 – 2026</span>
-                  <h3 className="font-sans text-xl sm:text-2xl font-bold text-[#FFF6ED] mt-1 tabular-nums lining-nums">
+                  <h3 className="font-sans text-lg sm:text-xl lg:text-2xl font-bold text-[#FFF6ED] mt-1 tabular-nums lining-nums">
                     Cử nhân Kỹ thuật Phần mềm (Software Engineering)
                   </h3>
                   <div className="text-xs text-amber-300 mb-2 font-medium font-sans">Đại học FPT — Định hướng Kỹ sư Cầu nối tiếng Hàn (BrSE)</div>
@@ -788,19 +798,19 @@ export default function PortfolioPage() {
             </div>
 
             {/* Languages & Bridge Capability (1 Column) */}
-            <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-8 flex flex-col justify-between space-y-6">
+            <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-5 sm:p-8 flex flex-col justify-between space-y-6">
               <div>
                 <div className="flex items-center gap-2.5 text-amber-400 mb-4">
                   <Languages className="w-5 h-5" />
-                  <h3 className="font-sans text-xl font-bold text-[#FFF6ED] tabular-nums lining-nums">Năng Lực Ngôn Ngữ</h3>
+                  <h3 className="font-sans text-lg sm:text-xl font-bold text-[#FFF6ED] tabular-nums lining-nums">Năng Lực Ngôn Ngữ</h3>
                 </div>
                 <p className="text-xs sm:text-sm text-neutral-200 leading-relaxed mb-6 font-light font-sans tabular-nums lining-nums">
                   Nền tảng ngoại ngữ vững chắc sẵn sàng đáp ứng vai trò Kỹ sư cầu nối (BrSE) hoặc làm việc trong môi trường dự án công nghệ quốc tế.
                 </p>
 
-                <div className="space-y-5">
+                <div className="space-y-4 sm:space-y-5">
                   {/* Korean */}
-                  <div className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-2">
+                  <div className="p-3.5 sm:p-4 rounded-xl bg-white/5 border border-white/10 space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-semibold text-[#FFF6ED] font-sans">Tiếng Hàn (Korean)</span>
                       <span className="rounded-full px-2.5 py-0.5 bg-amber-500/20 text-amber-300 font-mono text-xs font-bold border border-amber-500/30 lining-nums tabular-nums">
@@ -813,7 +823,7 @@ export default function PortfolioPage() {
                   </div>
 
                   {/* English */}
-                  <div className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-2">
+                  <div className="p-3.5 sm:p-4 rounded-xl bg-white/5 border border-white/10 space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-semibold text-[#FFF6ED] font-sans">Tiếng Anh (English)</span>
                       <span className="rounded-full px-2.5 py-0.5 bg-white/10 text-white font-mono text-xs font-bold border border-white/15 lining-nums tabular-nums">
@@ -828,7 +838,7 @@ export default function PortfolioPage() {
               </div>
 
               {/* Ready to connect banner */}
-              <div className="p-4 rounded-xl bg-gradient-to-r from-amber-500/15 to-transparent border border-amber-500/20 text-xs text-amber-200 flex items-center gap-3 font-sans">
+              <div className="p-3.5 sm:p-4 rounded-xl bg-gradient-to-r from-amber-500/15 to-transparent border border-amber-500/20 text-xs text-amber-200 flex items-center gap-3 font-sans">
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0" />
                 <span>Sẵn sàng tiếp nhận vị trí Full-stack Engineer hoặc Korean BrSE tại TP.HCM &amp; Remote.</span>
               </div>
@@ -841,14 +851,14 @@ export default function PortfolioPage() {
             SECTION 5: CONNECT FOOTER
         ======================================================== */}
         <footer className="w-full">
-          <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-8 sm:p-12 relative overflow-hidden">
-            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 pb-8 border-b border-white/10">
+          <div className="bg-[#161412]/85 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_12px_32px_rgba(0,0,0,0.85)] p-5 sm:p-8 lg:p-12 relative overflow-hidden">
+            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 sm:gap-8 pb-6 sm:pb-8 border-b border-white/10">
               <div className="space-y-3">
                 <div className="inline-flex items-center gap-2 text-xs uppercase font-mono tracking-widest text-amber-400">
                   <Mail className="w-4 h-4" />
                   <span>Kênh liên lạc trực tiếp</span>
                 </div>
-                <h3 className="font-sans text-3xl sm:text-4xl font-bold text-[#FFF6ED] tabular-nums lining-nums">
+                <h3 className="font-sans text-2xl sm:text-3xl lg:text-4xl font-bold text-[#FFF6ED] tabular-nums lining-nums">
                   Sẵn Sàng Hợp Tác &amp; Cống Hiến
                 </h3>
                 <p className="text-xs sm:text-sm text-neutral-200 max-w-xl font-light font-sans">
@@ -857,20 +867,20 @@ export default function PortfolioPage() {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="w-full sm:w-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
                 <button
                   onClick={() => setIsCvModalOpen(true)}
-                  className="rounded-full px-6 py-2.5 bg-gradient-to-b from-[#FFF6ED] to-[#E2D5C5] text-black font-semibold shadow-[0_3px_8px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,1)] hover:brightness-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer font-sans"
+                  className="rounded-full px-5 py-2.5 min-h-[44px] bg-gradient-to-b from-[#FFF6ED] to-[#E2D5C5] text-black font-semibold text-xs sm:text-sm shadow-[0_3px_8px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,1)] hover:brightness-105 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer font-sans"
                 >
-                  <Download className="w-4 h-4 text-black" />
+                  <Download className="w-4 h-4 text-black shrink-0" />
                   <span>Tải CV (Bản tiếng Anh)</span>
                 </button>
 
                 <a
                   href="mailto:takhackhoan@gmail.com"
-                  className="rounded-full px-5 py-2.5 bg-white/5 border border-white/10 text-sm text-neutral-100 hover:bg-white/10 hover:border-amber-400/40 backdrop-blur-sm transition-all flex items-center gap-2 font-sans"
+                  className="rounded-full px-5 py-2.5 min-h-[44px] bg-white/5 border border-white/10 text-xs sm:text-sm text-neutral-100 hover:bg-white/10 hover:border-amber-400/40 backdrop-blur-sm transition-all flex items-center justify-center gap-2 font-sans"
                 >
-                  <Mail className="w-4 h-4 text-amber-300" />
+                  <Mail className="w-4 h-4 text-amber-300 shrink-0" />
                   <span>Gửi Thư Điện Tử</span>
                 </a>
               </div>
@@ -959,7 +969,7 @@ export default function PortfolioPage() {
       ======================================================== */}
       {isCvModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in cv-modal-overlay">
-          <div className="relative w-full max-w-4xl max-h-[92vh] overflow-y-auto bg-[#191613] border border-amber-500/30 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.95)] p-6 sm:p-8 text-[#FFF6ED] cv-modal-card">
+          <div className="relative w-full max-w-4xl max-h-[92vh] overflow-y-auto bg-[#191613] border border-amber-500/30 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.95)] p-4 sm:p-6 lg:p-8 text-[#FFF6ED] cv-modal-card">
 
             {/* Modal Header & Pill Toolbar (Hidden in Print) */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-white/10 gap-4 no-print">
