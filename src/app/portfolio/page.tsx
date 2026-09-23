@@ -817,7 +817,7 @@ export default function PortfolioPage() {
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-semibold text-[#FFF6ED] font-sans">Tiếng Anh (English)</span>
                       <span className="rounded-full px-2.5 py-0.5 bg-white/10 text-white font-mono text-xs font-bold border border-white/15 lining-nums tabular-nums">
-                        Ielts 6.0
+                        IELTS 6.0
                       </span>
                     </div>
                     <p className="text-xs text-neutral-200 leading-relaxed font-light font-sans tabular-nums lining-nums">
